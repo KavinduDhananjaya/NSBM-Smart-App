@@ -1,8 +1,8 @@
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/root_page/root_page.dart';
-import 'package:smart_app/ui/widgets/custom_app_bar.dart';
 
 import 'profile_bloc.dart';
 import 'profile_state.dart';
@@ -23,9 +23,20 @@ class ProfileView extends StatelessWidget {
 
     CustomSnackBar customSnackBar;
     final scaffold = Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(double.infinity, 80),
-        child: CustomAppBar(title: "Profile",),
+      appBar: AppBar(
+        brightness: Brightness.light,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(
+          "Profile",
+          style: TextStyle(
+            color: StyledColors.DARK_GREEN,
+            fontWeight: FontWeight.w500,
+            fontSize: 28,
+          ),
+        ),
       ),
       body: Container(
         child: Center(child: Text("Profile View"),),
