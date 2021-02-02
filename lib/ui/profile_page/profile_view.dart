@@ -13,6 +13,33 @@ class ProfileView extends StatelessWidget {
     child: CircularProgressIndicator(),
   );
 
+  final titleStyle = TextStyle(
+    color: StyledColors.DARK_BLUE.withOpacity(0.6),
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+
+  final subtitleStyle = TextStyle(
+    color: StyledColors.DARK_BLUE,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  final separator = Container(
+    margin: EdgeInsets.symmetric(horizontal: 16),
+    height: 1.2,
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.centerRight,
+        end: Alignment.centerLeft,
+        colors: [
+          StyledColors.DARK_GREEN.withOpacity(0.1),
+          StyledColors.PRIMARY_COLOR.withOpacity(0.3)
+        ],
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
@@ -39,7 +66,121 @@ class ProfileView extends StatelessWidget {
         ),
       ),
       body: Container(
-        child: Center(child: Text("Profile View"),),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 8,
+              ),
+              ProfileImage(
+                style: TextStyle(
+                  color: StyledColors.DARK_GREEN,
+                  fontSize: 27,
+                  fontWeight: FontWeight.w600,
+                ),
+                radius: 32,
+                firstName: "Kavin",
+                lastName: "Dhana",
+                image: null,
+                backgroundColor: StyledColors.DARK_GREEN.withOpacity(0.4),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                "KAvindu Dhananjaya",
+                style: TextStyle(
+                  color: StyledColors.DARK_GREEN.withOpacity(0.7),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              ListTile(
+                title: Text(
+                  "NSBM Email",
+                  style: titleStyle,
+                ),
+                subtitle: Text(
+                  'testing2gmail.com',
+                  style: subtitleStyle,
+                ),
+              ),
+              separator,
+              ListTile(
+                title: Text(
+                  "NSBM ID",
+                  style: titleStyle,
+                ),
+                subtitle: Text(
+                  '234567890',
+                  style: subtitleStyle,
+                ),
+              ),
+              separator,
+              ListTile(
+                title: Text(
+                  "Registered University",
+                  style: titleStyle,
+                ),
+                subtitle: Text(
+                  'Plymouth',
+                  style: subtitleStyle,
+                ),
+              ),
+              separator,
+              ListTile(
+                title: Text(
+                  "Degree Program",
+                  style: titleStyle,
+                ),
+                subtitle: Text(
+                  'Engineering',
+                  style: subtitleStyle,
+                ),
+              ),
+              separator,
+              ListTile(
+                title: Text(
+                  "University Email",
+                  style: titleStyle,
+                ),
+                subtitle: Text(
+                  'adf@gmail.com',
+                  style: subtitleStyle,
+                ),
+              ),
+              separator,
+              ListTile(
+                title: Text(
+                  "University ID",
+                  style: titleStyle,
+                ),
+                subtitle: Text(
+                  '5467890',
+                  style: subtitleStyle,
+                ),
+              ),
+              separator,
+              SizedBox(
+                height: 24,
+              ),
+              FlatButton(
+                onPressed: () {},
+                child: Text(
+                  "LOGOUT",
+                  style: TextStyle(
+                    color: StyledColors.DARK_BLUE,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
 
