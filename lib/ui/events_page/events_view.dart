@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/root_page/root_page.dart';
+import 'package:smart_app/ui/widgets/event_card.dart';
 import 'events_bloc.dart';
 import 'events_state.dart';
 
@@ -40,8 +41,13 @@ class EventsView extends StatelessWidget {
       body: BlocBuilder<EventsBloc, EventsState>(
           buildWhen: (pre, current) => true,
           builder: (context, state) {
-            return Center(
-              child: Text("HI..."),
+            return ListView(
+              children: [
+                EventCard(),
+                EventCard(),
+                EventCard(),
+                EventCard(),
+              ],
             );
           }),
     );

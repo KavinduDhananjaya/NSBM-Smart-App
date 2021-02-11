@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/root_page/root_page.dart';
+import 'package:smart_app/ui/widgets/notification_card.dart';
 
 import 'notification_bloc.dart';
 import 'notification_state.dart';
@@ -41,8 +42,15 @@ class NotificationView extends StatelessWidget {
       body: BlocBuilder<NotificationBloc, NotificationState>(
           buildWhen: (pre, current) => true,
           builder: (context, state) {
-            return Center(
-              child: Text("HI..."),
+            return ListView(
+              children: [
+                NotificationCard(),
+                NotificationCard(),
+                NotificationCard(),
+                NotificationCard(),
+                NotificationCard(),
+                NotificationCard(),
+              ],
             );
           }),
     );
