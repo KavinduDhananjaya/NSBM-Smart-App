@@ -4,6 +4,7 @@ import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
+import 'package:smart_app/ui/hall_booking_page/hall_info_view.dart';
 import 'package:smart_app/ui/root_page/root_page.dart';
 import 'package:smart_app/ui/widgets/round_button.dart';
 
@@ -32,6 +33,20 @@ class HallBookingView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: true,
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.info_outline),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HallInfoView(),
+                  fullscreenDialog: true
+                ),
+              );
+            },
+          ),
+        ],
         title: Text(
           "Hall Booking",
           style: TextStyle(
@@ -154,7 +169,6 @@ class HallBookingView extends StatelessWidget {
             SizedBox(
               height: 16,
             ),
-
             DateTimePicker(
               type: DateTimePickerType.date,
               initialValue: '',
@@ -168,19 +182,26 @@ class HallBookingView extends StatelessWidget {
               },
               onSaved: (val) => print(val),
             ),
-
             SizedBox(
               height: 32,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                FlatButton(onPressed: (){}, child: Text("Cancel"),color: StyledColors.LIGHT_GREEN,),
-                SizedBox(width: 16,),
-                FlatButton(onPressed: (){}, child: Text("Request"),color: StyledColors.PRIMARY_COLOR),
+                FlatButton(
+                  onPressed: () {},
+                  child: Text("Cancel"),
+                  color: StyledColors.LIGHT_GREEN,
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                FlatButton(
+                    onPressed: () {},
+                    child: Text("Request"),
+                    color: StyledColors.PRIMARY_COLOR),
               ],
             ),
-
           ],
         ),
       ),

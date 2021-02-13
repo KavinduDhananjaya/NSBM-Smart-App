@@ -2,6 +2,7 @@ import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/ui/hall_booking_page/hall_booking_page.dart';
+import 'package:smart_app/ui/lecture_appointment_page/lecture_appointment_page.dart';
 import 'package:smart_app/ui/root_page/root_page.dart';
 import 'package:smart_app/ui/widgets/home_page_app_bar.dart';
 
@@ -149,34 +150,42 @@ class HomeView extends StatelessWidget {
                   Expanded(
                       child: Column(
                     children: [
-                      Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          padding:
-                              EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Lecture Appointment",
-                                  style: textStyle,
+                      GestureDetector(
+                        child: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            padding:
+                                EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Lecture Appointment",
+                                    style: textStyle,
+                                  ),
                                 ),
-                              ),
-                              Icon(
-                                Icons.event_available_outlined,
-                                color: Colors.grey,
-                                size: 50,
-                              ),
-                            ],
+                                Icon(
+                                  Icons.event_available_outlined,
+                                  color: Colors.grey,
+                                  size: 50,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LectureAppointmentProvider(),fullscreenDialog: true));
+                        },
                       ),
                       SizedBox(
                         height: 16,
