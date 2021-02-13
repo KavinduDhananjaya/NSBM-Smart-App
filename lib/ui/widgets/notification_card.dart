@@ -20,7 +20,7 @@ class NotificationCard extends StatelessWidget {
               child: Text("Notification 1",style: TextStyle(fontSize: 17),maxLines: 2,overflow: TextOverflow.ellipsis,),
             ),
             SizedBox(width: 60,
-            child: Text("20 min ago",style: TextStyle(fontSize: 14,color: Colors.black87.withOpacity(0.4)),),)
+            child: Text("20 min ago",style: TextStyle(fontSize: 12,color: Colors.black87.withOpacity(0.4)),),)
           ],
         ),
       ),

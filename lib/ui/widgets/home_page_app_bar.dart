@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 
 class HomePageAppBar extends StatelessWidget {
-  final String title;
+  final String firstName;
+  final String lastName;
 
-  const HomePageAppBar({Key key, this.title}) : super(key: key);
+  const HomePageAppBar({
+    Key key,
+    this.firstName,
+    this.lastName,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 100,
@@ -26,17 +30,23 @@ class HomePageAppBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(width: 12,),
-              ProfileImage(
-                firstName: "Kavindu",
-                lastName: "Dhananjaya",
-                backgroundColor: StyledColors.DARK_GREEN,
-                minRadius: 25
+              SizedBox(
+                width: 12,
               ),
-              SizedBox(width: 16,),
+              ProfileImage(
+                  firstName: "$firstName",
+                  lastName: "$lastName",
+                  backgroundColor: StyledColors.DARK_GREEN,
+                  minRadius: 25),
+              SizedBox(
+                width: 16,
+              ),
               Text(
-                "Hello, Kavindu",
-                style: TextStyle(fontSize: 20, color: StyledColors.DARK_GREEN,fontWeight: FontWeight.w600),
+                "Hello, $firstName",
+                style: TextStyle(
+                    fontSize: 20,
+                    color: StyledColors.DARK_GREEN,
+                    fontWeight: FontWeight.w600),
               ),
             ],
           ),

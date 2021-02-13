@@ -28,7 +28,8 @@ class HomeView extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 80),
         child: HomePageAppBar(
-          title: "Home",
+          firstName: "John",
+          lastName: "Silva",
         ),
       ),
       body: Container(
@@ -66,7 +67,9 @@ class HomeView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Row(
               children: [
                 Expanded(
@@ -97,7 +100,9 @@ class HomeView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 16,),
+                      SizedBox(
+                        height: 16,
+                      ),
                       Card(
                         elevation: 5,
                         shape: RoundedRectangleBorder(
@@ -113,7 +118,9 @@ class HomeView extends StatelessWidget {
                                 "Events",
                                 style: textStyle,
                               ),
-                              SizedBox(height: 8,),
+                              SizedBox(
+                                height: 8,
+                              ),
                               Icon(
                                 Icons.event,
                                 color: Colors.grey,
@@ -126,7 +133,9 @@ class HomeView extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(width: 8,),
+                SizedBox(
+                  width: 8,
+                ),
                 Expanded(
                     child: Column(
                   children: [
@@ -159,7 +168,9 @@ class HomeView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16,),
+                    SizedBox(
+                      height: 16,
+                    ),
                     Card(
                       elevation: 5,
                       shape: RoundedRectangleBorder(
@@ -175,7 +186,9 @@ class HomeView extends StatelessWidget {
                               "University Map",
                               style: textStyle,
                             ),
-                            SizedBox(height: 8,),
+                            SizedBox(
+                              height: 8,
+                            ),
                             Icon(
                               Icons.map,
                               color: Colors.grey,
