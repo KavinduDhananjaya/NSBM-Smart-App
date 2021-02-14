@@ -138,16 +138,17 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         Image(
                           fit: BoxFit.fill,
-                          height: 140,
+                          height: 100,
                           image: AssetImage(Assets.LOGO_GRAPHIC),
                         ),
+                        SizedBox(height: 24,),
                         Text(
                           "Smart App",
                           maxLines: 2,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             height: 2,
-                            fontSize: 16,
+                            fontSize: 24,
                             fontWeight: FontWeight.w600,
                             color: StyledColors.DARK_BLUE,
                           ),
