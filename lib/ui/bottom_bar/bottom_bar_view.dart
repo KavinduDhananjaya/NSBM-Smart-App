@@ -6,6 +6,8 @@ import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/chat_page/chat_page.dart';
 import 'package:smart_app/ui/events_page/events_page.dart';
 import 'package:smart_app/ui/home_page/home_page.dart';
+import 'package:smart_app/ui/lecture_home_page/lecture_home_provider.dart';
+import 'package:smart_app/ui/lecture_profile_page/lecture_profile_page.dart';
 import 'package:smart_app/ui/notification_page/notification_page.dart';
 import 'package:smart_app/ui/profile_page/profile_page.dart';
 import 'package:smart_app/ui/root_page/root_page.dart';
@@ -22,7 +24,7 @@ class _BottomBarViewState extends State<BottomBarView> {
   );
 
   int selectedIndex = 0;
-  final type = 1;
+  final type = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +42,10 @@ class _BottomBarViewState extends State<BottomBarView> {
     ];
 
     final List<Widget> lecturerTabs = [
-      HomeProvider(),
+      LectureHomeProvider(),
       ChatProvider(),
       NotificationProvider(),
-      ProfileProvider(),
+      LecturerProfileProvider(),
     ];
 
     final studentBar = [

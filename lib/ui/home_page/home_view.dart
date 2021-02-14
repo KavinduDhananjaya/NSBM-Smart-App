@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/ui/hall_booking_page/hall_booking_page.dart';
 import 'package:smart_app/ui/lecture_appointment_page/lecture_appointment_page.dart';
 import 'package:smart_app/ui/root_page/root_page.dart';
+import 'package:smart_app/ui/time_table_page/time_table_page.dart';
 import 'package:smart_app/ui/widgets/home_page_app_bar.dart';
 
 import 'home_bloc.dart';
@@ -41,32 +42,40 @@ class HomeView extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Text(
-                        "Timetable",
-                        style: textStyle,
-                      ),
-                      Icon(
-                        Icons.table_chart,
-                        color: Colors.grey,
-                        size: 50,
-                      ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                    ],
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TimeTableProvider(),fullscreenDialog: true));
+                },
+                child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          "Timetable",
+                          style: textStyle,
+                        ),
+                        Icon(
+                          Icons.table_chart,
+                          color: Colors.grey,
+                          size: 50,
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
