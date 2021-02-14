@@ -31,8 +31,8 @@ class HomeView extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 80),
         child: HomePageAppBar(
-          firstName: "John",
-          lastName: "Silva",
+          firstName: "Demo",
+          lastName: "User",
         ),
       ),
       body: Container(

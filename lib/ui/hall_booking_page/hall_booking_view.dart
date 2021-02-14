@@ -50,7 +50,7 @@ class HallBookingView extends StatelessWidget {
         title: Text(
           "Hall Booking",
           style: TextStyle(
-            color: StyledColors.DARK_BLUE,
+            color: StyledColors.DARK_GREEN,
             fontWeight: FontWeight.w500,
             fontSize: 24,
           ),

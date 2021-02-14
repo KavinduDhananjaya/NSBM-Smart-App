@@ -32,7 +32,7 @@ class LectureHomeView extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 80),
         child: HomePageAppBar(
-          firstName: "John",
+          firstName: "Demo",
           lastName: "Silva",
         ),
       ),

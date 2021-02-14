@@ -88,7 +88,7 @@ class ProfileView extends StatelessWidget {
                 height: 16,
               ),
               Text(
-                "KAvindu Dhananjaya",
+                "Demo User",
                 style: TextStyle(
                   color: StyledColors.DARK_GREEN.withOpacity(0.7),
                   fontSize: 18,
