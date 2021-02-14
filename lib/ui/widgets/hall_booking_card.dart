@@ -1,8 +1,9 @@
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_app/theme/styled_colors.dart';
-import 'package:smart_app/ui/hall_booking_details_page/hall_booking_details_page.dart';
-import 'package:smart_app/ui/lecture_appointment_details_page/lecture_appointment_details_page.dart';
+import 'package:smart_app/ui/all_appointment_page/lecture_appointment_details_page/lecture_appointment_details_provider.dart';
+
+import 'package:smart_app/ui/lecture_hall_booking_page/hall_booking_details_page/hall_booking_details_provider.dart';
 
 class HallBookingCard extends StatelessWidget {
   final int type;

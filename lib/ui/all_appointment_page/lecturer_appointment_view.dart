@@ -111,15 +111,19 @@ class LecturerAppointmentView extends StatelessWidget {
                   ),
                   HallBookingCard(
                     type: 0,
+                    action: 1,
                   ),
                   HallBookingCard(
                     type: 1,
+                    action: 1,
                   ),
                   HallBookingCard(
                     type: 1,
+                    action: 1,
                   ),
                   HallBookingCard(
                     type: 3,
+                    action: 1,
                   )
                 ],
               ),

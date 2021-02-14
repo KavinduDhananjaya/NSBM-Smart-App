@@ -1,9 +1,9 @@
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/ui/all_appointment_page/lecturer_appointment_provider.dart';
 import 'package:smart_app/ui/lecture_appointment_page/lecture_appointment_page.dart';
 import 'package:smart_app/ui/lecture_hall_booking_page/lecture_hall_booking_provider.dart';
-import 'package:smart_app/ui/lecturer_appointment_page/lecturer_appointment_page.dart';
 import 'package:smart_app/ui/root_page/root_page.dart';
 import 'package:smart_app/ui/time_table_page/time_table_provider.dart';
 import 'package:smart_app/ui/widgets/home_page_app_bar.dart';
@@ -18,7 +18,6 @@ class LectureHomeView extends StatelessWidget {
   );
 
   final textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
-
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +44,12 @@ class LectureHomeView extends StatelessWidget {
           child: Column(
             children: [
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => TimeTableProvider(),fullscreenDialog: true));
+                          builder: (context) => TimeTableProvider(),
+                          fullscreenDialog: true));
                 },
                 child: Card(
                   elevation: 5,
@@ -119,7 +119,9 @@ class LectureHomeView extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LectureHallBookingProvider(),fullscreenDialog: true));
+                                    builder: (context) =>
+                                        LectureHallBookingProvider(),
+                                    fullscreenDialog: true));
                           },
                         ),
                       ],
@@ -130,49 +132,53 @@ class LectureHomeView extends StatelessWidget {
                   ),
                   Expanded(
                       child: Column(
-                        children: [
-                          GestureDetector(
-                            child: Card(
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Container(
-                                width: double.infinity,
-                                padding:
-                                EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Lecture Appointment",
-                                        style: textStyle,
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.event_available_outlined,
-                                      color: Colors.grey,
-                                      size: 50,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: (){
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LecturerAppointmentProvider(),fullscreenDialog: true));
-                            },
+                    children: [
+                      GestureDetector(
+                        child: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ],
-                      )),
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Lecture Appointment",
+                                    style: textStyle,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.event_available_outlined,
+                                  color: Colors.grey,
+                                  size: 50,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      LecturerAppointmentProvider(),
+                                  fullscreenDialog: true));
+                        },
+                      ),
+                    ],
+                  )),
                 ],
               ),
-              SizedBox(height:16,),
+              SizedBox(
+                height: 16,
+              ),
               Card(
                 elevation: 5,
                 shape: RoundedRectangleBorder(
@@ -180,8 +186,7 @@ class LectureHomeView extends StatelessWidget {
                 ),
                 child: Container(
                   width: double.infinity,
-                  padding:
-                  EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                   child: Column(
                     children: [
                       Text(
@@ -205,7 +210,6 @@ class LectureHomeView extends StatelessWidget {
         ),
       ),
     );
-
 
     return MultiBlocListener(
       listeners: [
