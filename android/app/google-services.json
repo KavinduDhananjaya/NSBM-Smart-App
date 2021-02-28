@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "408687716635",
+    "project_id": "nsbm-smart-app",
+    "storage_bucket": "nsbm-smart-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408687716635:android:cc62b5135a2fdca8aecbbe",
+        "android_client_info": {
+          "package_name": "lk.nsbm.smart_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "408687716635-6uu7enk5ui92qn6iji1giqjluj2lp9hr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuq_6g25TLSnm5Jf6N9jBDUNYsrqSy2Mc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "408687716635-6uu7enk5ui92qn6iji1giqjluj2lp9hr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
