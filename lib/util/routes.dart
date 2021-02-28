@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_app/ui/bottom_bar/bottom_bar_view.dart';
-import 'package:smart_app/ui/login_page/login_provider.dart';
+import 'package:smart_app/ui/common/bottom_bar/bottom_bar_view.dart';
+import 'package:smart_app/ui/common/login_page/login_page.dart';
 
 abstract class Routes {
   Routes._();
