@@ -2,6 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcode_bloc/fcode_bloc.dart';
 
 class Notification extends DBModel {
+
+  static const TITLE='title';
+  static const CREATED_AT='createdAt';
+  static const CREATED_BY='createdBy';
+  static const TARGET_USER='targetUser';
+
   String title;
   Timestamp createdAt;
   DocumentReference createdBy;
