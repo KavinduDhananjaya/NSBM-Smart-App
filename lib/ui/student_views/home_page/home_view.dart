@@ -2,6 +2,7 @@ import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
+import 'package:smart_app/ui/student_views/events_page/events_page.dart';
 import 'package:smart_app/ui/student_views/hall_booking_page/hall_booking_page.dart';
 import 'package:smart_app/ui/student_views/lecturer_appointment_page/lecturer_appointment_page.dart';
 import 'package:smart_app/ui/student_views/time_table_page/time_table_page.dart';
@@ -128,30 +129,38 @@ class HomeView extends StatelessWidget {
                         SizedBox(
                           height: 16,
                         ),
-                        Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                                vertical: 16, horizontal: 16),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Events",
-                                  style: textStyle,
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Icon(
-                                  Icons.event,
-                                  color: Colors.grey,
-                                  size: 50,
-                                ),
-                              ],
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EventsProvider(),fullscreenDialog: true));
+                          },
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 16),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Events",
+                                    style: textStyle,
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Icon(
+                                    Icons.event,
+                                    color: Colors.grey,
+                                    size: 50,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

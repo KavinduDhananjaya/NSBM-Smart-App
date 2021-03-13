@@ -27,26 +27,33 @@ class EventsView extends StatelessWidget {
         brightness: Brightness.light,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
           "Upcoming Events",
           style: TextStyle(
             color: StyledColors.DARK_GREEN,
             fontWeight: FontWeight.w500,
-            fontSize: 28,
+            fontSize: 24,
           ),
         ),
       ),
       body: BlocBuilder<EventsBloc, EventsState>(
           buildWhen: (pre, current) => true,
           builder: (context, state) {
-            return ListView(
+            return Column(
               children: [
-                EventCard(),
-                EventCard(),
-                EventCard(),
-                EventCard(),
+                SizedBox(height: 32,),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      EventCard(),
+                      EventCard(),
+                      EventCard(),
+                      EventCard(),
+                    ],
+                  ),
+                ),
               ],
             );
           }),

@@ -11,6 +11,7 @@ import 'package:smart_app/ui/lecturer_views/lecturer_profile_page/lecture_profil
 import 'package:smart_app/ui/student_views/events_page/events_page.dart';
 import 'package:smart_app/ui/student_views/home_page/home_page.dart';
 import 'package:smart_app/ui/student_views/profile_page/profile_page.dart';
+import 'package:smart_app/ui/student_views/special_notice_page/special_notice_page.dart';
 
 class BottomBarView extends StatefulWidget {
   @override
@@ -36,7 +37,7 @@ class _BottomBarViewState extends State<BottomBarView> {
       HomeProvider(),
       ChatProvider(),
       NotificationProvider(),
-      EventsProvider(),
+      SpecialNoticeProvider(),
       ProfileProvider(),
     ];
 
@@ -62,7 +63,7 @@ class _BottomBarViewState extends State<BottomBarView> {
       ),
       FFNavigationBarItem(
         iconData: Icons.event,
-        label: 'Event',
+        label: 'Special',
       ),
       FFNavigationBarItem(
         iconData: Icons.person_rounded,
