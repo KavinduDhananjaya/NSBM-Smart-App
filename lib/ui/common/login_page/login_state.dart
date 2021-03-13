@@ -3,20 +3,25 @@ import 'package:flutter/material.dart';
 @immutable
 class LoginState {
   final String error;
+  final String email;
 
   LoginState({
     @required this.error,
+    @required this.email,
   });
-
-  static LoginState get initialState => LoginState(
-    error: '',
-  );
 
   LoginState clone({
     String error,
+    String email,
   }) {
     return LoginState(
       error: error ?? this.error,
+      email: email ?? this.email,
     );
   }
+
+  static LoginState get initialState => LoginState(
+    error: "",
+    email: "",
+  );
 }

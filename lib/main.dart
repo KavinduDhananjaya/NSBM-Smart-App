@@ -7,5 +7,5 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   final user = await Authentication().getLoggedUser();
-  runApp(SmartAppView(null));
+  runApp(SmartAppView(user.email));
 }

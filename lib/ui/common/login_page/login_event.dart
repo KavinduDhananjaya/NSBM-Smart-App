@@ -8,3 +8,10 @@ class ErrorEvent extends LoginEvent {
 
   ErrorEvent(this.error);
 }
+
+class LoginClickEvent extends LoginEvent {
+  final String email;
+  final String password;
+
+  LoginClickEvent(this.email, this.password);
+}

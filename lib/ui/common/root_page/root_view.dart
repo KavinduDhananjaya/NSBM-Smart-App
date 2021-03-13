@@ -1,6 +1,7 @@
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/ui/common/root_page/root_page.dart';
 import 'package:smart_app/util/routes.dart';
 
 import 'root_bloc.dart';
@@ -28,6 +29,10 @@ class RootView extends StatelessWidget {
         child: CircularProgressIndicator(),
       ),
     );
+
+    if (email != null && !rootBloc.state.userLogged) {
+      rootBloc.add(UserLoggedEvent(email));
+    }
 
 
     if (email == null) {

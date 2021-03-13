@@ -24,12 +24,11 @@ class _BottomBarViewState extends State<BottomBarView> {
   );
 
   int selectedIndex = 0;
-  final type = 0;
 
   @override
   Widget build(BuildContext context) {
     final rootBloc = BlocProvider.of<RootBloc>(context);
-    log.d("Loading Home View");
+    log.d("Loading Bottom View");
 
     CustomSnackBar customSnackBar;
 
@@ -91,30 +90,42 @@ class _BottomBarViewState extends State<BottomBarView> {
       ),
     ];
 
+    final scaffold = BlocBuilder<RootBloc, RootState>(
+        buildWhen: (previous, current) =>
+        previous.currentUser != current.currentUser,
+        builder: (context, state) {
+          if (state.currentUser == null) {
+            return Scaffold(
+              body: loadingWidget,
+            );
+          }
+          final type = state?.currentUser?.role;
 
-    final scaffold = Scaffold(
-      body: type == 1 ? studentTabs[selectedIndex] : lecturerTabs[selectedIndex],
-      bottomNavigationBar: FFNavigationBar(
-        theme: FFNavigationBarTheme(
-          barBackgroundColor: Colors.white,
-          selectedItemBorderColor: StyledColors.LIGHT_GREEN,
-          selectedItemBackgroundColor:
-              StyledColors.PRIMARY_COLOR.withOpacity(0.5),
-          selectedItemIconColor: Colors.white,
-          selectedItemLabelColor: StyledColors.DARK_GREEN,
-          showSelectedItemShadow: false,
-          unselectedItemIconColor: StyledColors.LIGHT_GREEN,
-          unselectedItemLabelColor: StyledColors.LIGHT_GREEN,
-        ),
-        selectedIndex: selectedIndex,
-        onSelectTab: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
-        items: type == 1 ? studentBar : lecturerBar,
-      ),
-    );
+          return  Scaffold(
+            body: type == 'student' ? studentTabs[selectedIndex] : lecturerTabs[selectedIndex],
+            bottomNavigationBar: FFNavigationBar(
+              theme: FFNavigationBarTheme(
+                barBackgroundColor: Colors.white,
+                selectedItemBorderColor: StyledColors.LIGHT_GREEN,
+                selectedItemBackgroundColor:
+                StyledColors.PRIMARY_COLOR.withOpacity(0.5),
+                selectedItemIconColor: Colors.white,
+                selectedItemLabelColor: StyledColors.DARK_GREEN,
+                showSelectedItemShadow: false,
+                unselectedItemIconColor: StyledColors.LIGHT_GREEN,
+                unselectedItemLabelColor: StyledColors.LIGHT_GREEN,
+              ),
+              selectedIndex: selectedIndex,
+              onSelectTab: (index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              items: type == "student "? studentBar : lecturerBar,
+            ),
+          );
+        });
+
 
     return scaffold;
   }

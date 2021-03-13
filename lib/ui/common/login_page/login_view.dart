@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/ui/common/login_page/login_page.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
 import 'package:smart_app/ui/widgets/round_button.dart';
 import 'package:smart_app/theme/styled_colors.dart';
@@ -72,6 +73,7 @@ class _LoginViewState extends State<LoginView> {
         _customSnackBar.showErrorSnackBar("Email or Password is Empty!");
         return;
       }
+      loginBloc.add(LoginClickEvent(email, password));
     }
 
     final emailField = TextFormField(
@@ -190,6 +192,25 @@ class _LoginViewState extends State<LoginView> {
             if (state.error.isNotEmpty) {
               _customSnackBar?.showErrorSnackBar(state.error);
             }
+          },
+        ),
+        BlocListener<LoginBloc, LoginState>(
+          listenWhen: (pre, current) =>
+          pre.email != current.email && current.email.isNotEmpty,
+          listener: (context, state) {
+
+            _customSnackBar.hideAll();
+            rootBloc.add(UserLoggedEvent(state.email));
+            log.d("Login successful.....");
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RootView(
+                  email: state.email,
+                ),
+              ),
+            );
           },
         ),
       ],
