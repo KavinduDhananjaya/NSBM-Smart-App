@@ -30,9 +30,14 @@ class HomeView extends StatelessWidget {
     final scaffold = Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 80),
-        child: HomePageAppBar(
-          firstName: "Demo",
-          lastName: "User",
+        child: BlocBuilder<RootBloc,RootState>(
+          buildWhen: (previous, current) => previous.currentUser!=current.currentUser,
+          builder: (context, state) {
+            return HomePageAppBar(
+              firstName: "${state.currentUser.name}",
+              lastName: " ",
+            );
+          }
         ),
       ),
       body: Container(

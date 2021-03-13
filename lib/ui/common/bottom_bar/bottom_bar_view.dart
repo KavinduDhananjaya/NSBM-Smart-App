@@ -107,13 +107,12 @@ class _BottomBarViewState extends State<BottomBarView> {
               theme: FFNavigationBarTheme(
                 barBackgroundColor: Colors.white,
                 selectedItemBorderColor: StyledColors.LIGHT_GREEN,
-                selectedItemBackgroundColor:
-                StyledColors.PRIMARY_COLOR.withOpacity(0.5),
+                selectedItemBackgroundColor: StyledColors.PRIMARY_COLOR.withOpacity(0.8),
                 selectedItemIconColor: Colors.white,
                 selectedItemLabelColor: StyledColors.DARK_GREEN,
                 showSelectedItemShadow: false,
-                unselectedItemIconColor: StyledColors.LIGHT_GREEN,
-                unselectedItemLabelColor: StyledColors.LIGHT_GREEN,
+                unselectedItemIconColor:  StyledColors.PRIMARY_COLOR.withOpacity(0.8),
+                unselectedItemLabelColor:  StyledColors.PRIMARY_COLOR.withOpacity(0.8),
               ),
               selectedIndex: selectedIndex,
               onSelectTab: (index) {
@@ -121,7 +120,7 @@ class _BottomBarViewState extends State<BottomBarView> {
                   selectedIndex = index;
                 });
               },
-              items: type == "student "? studentBar : lecturerBar,
+              items: type == "student"? studentBar : lecturerBar,
             ),
           );
         });
