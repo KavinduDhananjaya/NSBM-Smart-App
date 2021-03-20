@@ -1,19 +1,65 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fcode_common/fcode_common.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/hall_info_view/hall_info_view.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
+import 'package:smart_app/ui/student_views/hall_booking_page/hall_booking_event.dart';
 import 'hall_booking_bloc.dart';
 import 'hall_booking_state.dart';
 
-class HallBookingView extends StatelessWidget {
+class HallBookingView extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => HallBookingViewState();
+}
+
+class HallBookingViewState extends State<HallBookingView> {
   static final log = Log("HallBookingView");
   static final loadingWidget = Center(
     child: CircularProgressIndicator(),
   );
+
+  final _purposeController = TextEditingController();
+  final _capacityController = TextEditingController();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  CustomSnackBar customSnackBar;
+
+  FocusNode _purposeFocus;
+  FocusNode _capacityFocus;
+  FocusNode _nameFocus;
+  FocusNode _passwordFocus;
+  FocusNode _confirmPasswordFocus;
+
+  @override
+  void initState() {
+    super.initState();
+    _purposeFocus = FocusNode();
+    _capacityFocus = FocusNode();
+    _nameFocus = FocusNode();
+    _passwordFocus = FocusNode();
+    _confirmPasswordFocus = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _purposeFocus.dispose();
+    _capacityFocus?.dispose();
+    _purposeController.dispose();
+    _passwordFocus?.dispose();
+    _confirmPasswordFocus.dispose();
+    _nameFocus.dispose();
+    super.dispose();
+  }
+
+  String faculty;
+  String hall;
+  String lecturer;
+  Timestamp date;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +69,10 @@ class HallBookingView extends StatelessWidget {
     final rootBloc = BlocProvider.of<RootBloc>(context);
     log.d("Loading HallBooking View");
 
-    CustomSnackBar customSnackBar;
+    customSnackBar = CustomSnackBar(scaffoldKey: scaffoldKey);
+
     final scaffold = Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         brightness: Brightness.light,
         elevation: 0,
@@ -38,9 +86,8 @@ class HallBookingView extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HallInfoView(),
-                  fullscreenDialog: true
-                ),
+                    builder: (context) => HallInfoView(),
+                    fullscreenDialog: true),
               );
             },
           ),
@@ -62,34 +109,40 @@ class HallBookingView extends StatelessWidget {
             SizedBox(
               height: 16,
             ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Radio(
-                      value: "KAvindu",
-                      groupValue: true,
-                      onChanged: (value) {
-                        print(value);
-                      },
-                    ),
-                    Text('Student')
-                  ],
-                ),
-                Row(
-                  children: [
-                    Radio(
-                      value: "KAvindu",
-                      groupValue: true,
-                      onChanged: (value) {
-                        print(value);
-                      },
-                    ),
-                    Text('Club or Organization')
-                  ],
-                ),
-              ],
-            ),
+            BlocBuilder<HallBookingBloc, HallBookingState>(
+                buildWhen: (pre, current) => pre.type != current.type,
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                            value: 1,
+                            groupValue: state.type,
+                            onChanged: (value) {
+                              hall_bookingBloc.add(ChangeRoleEvent(value));
+                            },
+                            activeColor: StyledColors.PRIMARY_COLOR,
+                          ),
+                          Text('Student')
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 2,
+                            groupValue: state.type,
+                            onChanged: (value) {
+                              hall_bookingBloc.add(ChangeRoleEvent(value));
+                            },
+                            activeColor: StyledColors.PRIMARY_COLOR,
+                          ),
+                          Text('Club or Organization')
+                        ],
+                      ),
+                    ],
+                  );
+                }),
             SizedBox(
               height: 16,
             ),
@@ -99,6 +152,7 @@ class HallBookingView extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(labelText: "Purpose"),
               onFieldSubmitted: (value) {},
+              controller: _purposeController,
             ),
             SizedBox(
               height: 16,
@@ -109,12 +163,16 @@ class HallBookingView extends StatelessWidget {
               items: ["kjaf", "afeafe", "atresvdg"],
               label: "Select Faculty",
               selectedItem: null,
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  faculty = value;
+                });
+              },
               showSearchBox: false,
               searchBoxDecoration: InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                labelText: "Search User",
+                labelText: "Search Faculty",
               ),
               showClearButton: true,
             ),
@@ -127,6 +185,7 @@ class HallBookingView extends StatelessWidget {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: "Capacity"),
               onFieldSubmitted: (value) {},
+              controller: _capacityController,
             ),
             SizedBox(
               height: 16,
@@ -135,14 +194,18 @@ class HallBookingView extends StatelessWidget {
               mode: Mode.DIALOG,
               maxHeight: 300,
               items: ["kjaf", "afeafe", "atresvdg"],
-              label: "Available Holes",
+              label: "Available Halls",
               selectedItem: null,
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  hall = value;
+                });
+              },
               showSearchBox: false,
               searchBoxDecoration: InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                labelText: "Search User",
+                labelText: "Search Hall",
               ),
               showClearButton: true,
             ),
@@ -155,12 +218,16 @@ class HallBookingView extends StatelessWidget {
               items: ["kjaf", "afeafe", "atresvdg"],
               label: "Responsible Lecture",
               selectedItem: null,
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  lecturer = value;
+                });
+              },
               showSearchBox: false,
               searchBoxDecoration: InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                labelText: "Search User",
+                labelText: "Search Lecturer",
               ),
               showClearButton: true,
             ),
@@ -178,7 +245,9 @@ class HallBookingView extends StatelessWidget {
                 print(val);
                 return null;
               },
-              onSaved: (val) => print(val),
+              onSaved: (val) {
+                // currentDate = Timestamp.fromDate(val);
+              },
             ),
             SizedBox(
               height: 32,
@@ -195,7 +264,16 @@ class HallBookingView extends StatelessWidget {
                   width: 16,
                 ),
                 FlatButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      hall_bookingBloc.add(
+                        CreateHallRequestEvent(
+                          purpose: _purposeController.text,
+                          capacity: int.parse(_capacityController.text),
+                          faculty: faculty,
+                          date: Timestamp.now(),
+                        ),
+                      );
+                    },
                     child: Text("Request"),
                     color: StyledColors.PRIMARY_COLOR),
               ],
@@ -212,6 +290,20 @@ class HallBookingView extends StatelessWidget {
           listener: (context, state) {
             if (state.error?.isNotEmpty ?? false) {
               customSnackBar?.showErrorSnackBar(state.error);
+            } else {
+              customSnackBar?.hideAll();
+            }
+          },
+        ),
+        BlocListener<HallBookingBloc, HallBookingState>(
+          listenWhen: (pre, current) => pre.state != current.state,
+          listener: (context, state) {
+            if (state.state == 1) {
+              customSnackBar?.showLoadingSnackBar(
+                  backgroundColor: StyledColors.PRIMARY_COLOR);
+            } else if (state.state == 2) {
+              customSnackBar?.hideAll();
+              Navigator.pop(context);
             } else {
               customSnackBar?.hideAll();
             }
