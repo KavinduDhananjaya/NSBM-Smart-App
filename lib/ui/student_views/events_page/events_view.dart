@@ -38,20 +38,40 @@ class EventsView extends StatelessWidget {
           ),
         ),
       ),
-      body: BlocBuilder<EventsBloc, EventsState>(
-          buildWhen: (pre, current) => true,
+      body: BlocBuilder<RootBloc, RootState>(
+          buildWhen: (pre, current) => pre.allEvents != current.allEvents,
           builder: (context, state) {
+            if (state.allEvents == null) return loadingWidget;
+
+            List<Widget> children = [];
+
+            for (int i = 0; i < state.allEvents.length; i++) {
+              final event = state.allEvents[i];
+
+              final card = EventCard(
+                title: event.title,
+                imgUrl: event.imgUrl,
+                desc: event.description,
+              );
+
+              children.add(card);
+            }
+
+            if (children.isEmpty) {
+              children.add(Center(
+                child: Text(
+                  "No UpComing Events..",
+                  style: TextStyle(fontSize: 17, color: StyledColors.DARK_BLUE),
+                ),
+              ));
+            }
+
             return Column(
               children: [
                 SizedBox(height: 32,),
                 Expanded(
                   child: ListView(
-                    children: [
-                      EventCard(),
-                      EventCard(),
-                      EventCard(),
-                      EventCard(),
-                    ],
+                      children: children
                   ),
                 ),
               ],

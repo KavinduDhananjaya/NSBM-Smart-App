@@ -40,15 +40,38 @@ class SpecialNoticeView extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          NotificationCard(),
-          NotificationCard(),
-          NotificationCard(),
-          NotificationCard(),
-          NotificationCard(),
-          NotificationCard(),
-        ],
+      body: BlocBuilder<RootBloc, RootState>(
+        buildWhen: (pre, current) =>
+            pre.specialNotices != current.specialNotices,
+        builder: (context, state) {
+          if (state.specialNotices == null) {
+            return loadingWidget;
+          }
+
+          List<Widget> children = [];
+
+          for (int i = 0; i < state.specialNotices.length; i++) {
+            final notification = state.specialNotices[i];
+
+            final card = NotificationCard(
+              title: notification.title,
+              createdAt: notification.createdAt,
+            );
+
+            children.add(card);
+          }
+
+          if (children.isEmpty) {
+            children.add(Center(
+              child: Text(
+                "No Notifications..",
+                style: TextStyle(fontSize: 17, color: StyledColors.DARK_BLUE),
+              ),
+            ));
+          }
+
+          return ListView(children: children);
+        },
       ),
     );
 

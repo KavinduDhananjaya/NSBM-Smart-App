@@ -5,6 +5,7 @@ import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart' hide Notification;
 import 'package:smart_app/db/authentication.dart';
+import 'package:smart_app/db/model/event.dart';
 import 'package:smart_app/db/model/notification.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/event_repository.dart';
@@ -45,9 +46,11 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   void _getAllEvents() {
     _eventsSubscription?.cancel();
     _eventsSubscription = _eventRepository
-        .query(specification: ComplexSpecification([]))
+        .query(
+            specification: ComplexSpecification(
+                [ComplexWhere(Event.STATE, isEqualTo: "upComing")]))
         .listen((event) {
-      ChangeAllEvents(event);
+      add(ChangeAllEvents(event));
     });
   }
 
@@ -59,7 +62,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
           [ComplexWhere(Notification.TYPE, isEqualTo: Notification.ALL)]),
     )
         .listen((event) {
-      ChangeAllSpecialNotice(event);
+      add(ChangeAllSpecialNotice(event));
     });
   }
 
@@ -71,7 +74,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
           [ComplexWhere(Notification.TARGET_USER, isEqualTo: user.ref)]),
     )
         .listen((event) {
-      ChangeAllNotification(event);
+      add(ChangeAllNotification(event));
     });
   }
 

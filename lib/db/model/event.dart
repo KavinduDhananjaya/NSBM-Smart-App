@@ -3,6 +3,10 @@ import 'package:fcode_bloc/fcode_bloc.dart';
 
 class Event extends DBModel {
 
+  static const UP_COMING="upComing";
+  static const PASSED="passed";
+
+
   static const TITLE='title';
   static const IMG_URL='imgUrl';
   static const DESCRIPTION='description';

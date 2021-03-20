@@ -39,20 +39,39 @@ class NotificationView extends StatelessWidget {
           ),
         ),
       ),
-      body: BlocBuilder<NotificationBloc, NotificationState>(
-          buildWhen: (pre, current) => true,
-          builder: (context, state) {
-            return ListView(
-              children: [
-                NotificationCard(),
-                NotificationCard(),
-                NotificationCard(),
-                NotificationCard(),
-                NotificationCard(),
-                NotificationCard(),
-              ],
+      body: BlocBuilder<RootBloc, RootState>(
+        buildWhen: (pre, current) =>
+            pre.assignedNotifications != current.assignedNotifications,
+        builder: (context, state) {
+          if (state.assignedNotifications == null) {
+            return loadingWidget;
+          }
+
+          List<Widget> children = [];
+
+          for (int i = 0; i < state.assignedNotifications.length; i++) {
+            final notification = state.assignedNotifications[i];
+
+            final card = NotificationCard(
+              title: notification.title,
+              createdAt: notification.createdAt,
             );
-          }),
+
+            children.add(card);
+          }
+
+          if (children.isEmpty) {
+            children.add(Center(
+              child: Text(
+                "No Notifications..",
+                style: TextStyle(fontSize: 17, color: StyledColors.DARK_BLUE),
+              ),
+            ));
+          }
+
+          return ListView(children: children);
+        },
+      ),
     );
 
     return MultiBlocListener(
