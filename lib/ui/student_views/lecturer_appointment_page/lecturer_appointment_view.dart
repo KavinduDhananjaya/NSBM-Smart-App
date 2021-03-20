@@ -5,26 +5,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
+import 'package:smart_app/ui/student_views/lecturer_appointment_page/lecturer_appointment_event.dart';
 
 import 'lecturer_appointment_bloc.dart';
 import 'lecturer_appointment_state.dart';
 
-class LectureAppointmentView extends StatelessWidget {
+class LectureAppointmentView extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => LectureAppointmentViewState();
+}
+
+class LectureAppointmentViewState extends State<LectureAppointmentView> {
   static final log = Log("LectureAppointmentView");
   static final loadingWidget = Center(
     child: CircularProgressIndicator(),
   );
 
+  final _purposeController = TextEditingController();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  CustomSnackBar customSnackBar;
+  String faculty;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
-    final lecture_appointmentBloc = BlocProvider.of<LectureAppointmentBloc>(context);
+    final lecture_appointmentBloc =
+        BlocProvider.of<LectureAppointmentBloc>(context);
     // ignore: close_sinks
     final rootBloc = BlocProvider.of<RootBloc>(context);
     log.d("Loading LectureAppointment View");
 
-    CustomSnackBar customSnackBar;
+    customSnackBar = CustomSnackBar(scaffoldKey: scaffoldKey);
+
     final scaffold = Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         brightness: Brightness.light,
         elevation: 0,
@@ -48,34 +68,42 @@ class LectureAppointmentView extends StatelessWidget {
             SizedBox(
               height: 16,
             ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Radio(
-                      value: "KAvindu",
-                      groupValue: true,
-                      onChanged: (value) {
-                        print(value);
-                      },
-                    ),
-                    Text('Student')
-                  ],
-                ),
-                Row(
-                  children: [
-                    Radio(
-                      value: "KAvindu",
-                      groupValue: true,
-                      onChanged: (value) {
-                        print(value);
-                      },
-                    ),
-                    Text('Club or Organization')
-                  ],
-                ),
-              ],
-            ),
+            BlocBuilder<LectureAppointmentBloc, LectureAppointmentState>(
+                buildWhen: (pre, current) => pre.type != current.type,
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                            value: 1,
+                            groupValue: state.type,
+                            onChanged: (value) {
+                              lecture_appointmentBloc
+                                  .add(ChangeRoleEvent(value));
+                            },
+                            activeColor: StyledColors.PRIMARY_COLOR,
+                          ),
+                          Text('Student')
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 2,
+                            groupValue: state.type,
+                            onChanged: (value) {
+                              lecture_appointmentBloc
+                                  .add(ChangeRoleEvent(value));
+                            },
+                            activeColor: StyledColors.PRIMARY_COLOR,
+                          ),
+                          Text('Club or Organization')
+                        ],
+                      ),
+                    ],
+                  );
+                }),
             SizedBox(
               height: 16,
             ),
@@ -85,6 +113,7 @@ class LectureAppointmentView extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(labelText: "Purpose"),
               onFieldSubmitted: (value) {},
+              controller: _purposeController,
             ),
             SizedBox(
               height: 16,
@@ -100,14 +129,13 @@ class LectureAppointmentView extends StatelessWidget {
               searchBoxDecoration: InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                labelText: "Search User",
+                labelText: "Search Faculty",
               ),
               showClearButton: true,
             ),
             SizedBox(
               height: 16,
             ),
-
             DropdownSearch<String>(
               mode: Mode.DIALOG,
               maxHeight: 300,
@@ -126,7 +154,6 @@ class LectureAppointmentView extends StatelessWidget {
             SizedBox(
               height: 16,
             ),
-
             DateTimePicker(
               type: DateTimePickerType.date,
               initialValue: '',
@@ -140,19 +167,32 @@ class LectureAppointmentView extends StatelessWidget {
               },
               onSaved: (val) => print(val),
             ),
-
             SizedBox(
               height: 32,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                FlatButton(onPressed: (){}, child: Text("Cancel"),color: StyledColors.LIGHT_GREEN,),
-                SizedBox(width: 16,),
-                FlatButton(onPressed: (){}, child: Text("Request"),color: StyledColors.PRIMARY_COLOR),
+                FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancel"),
+                  color: StyledColors.LIGHT_GREEN,
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                FlatButton(
+                  onPressed: () {
+                    lecture_appointmentBloc.add(CreateLecturerRequest(
+                        _purposeController.text, faculty));
+                  },
+                  child: Text("Request"),
+                  color: StyledColors.PRIMARY_COLOR,
+                ),
               ],
             ),
-
           ],
         ),
       ),
@@ -165,6 +205,20 @@ class LectureAppointmentView extends StatelessWidget {
           listener: (context, state) {
             if (state.error?.isNotEmpty ?? false) {
               customSnackBar?.showErrorSnackBar(state.error);
+            } else {
+              customSnackBar?.hideAll();
+            }
+          },
+        ),
+        BlocListener<LectureAppointmentBloc, LectureAppointmentState>(
+          listenWhen: (pre, current) => pre.state != current.state,
+          listener: (context, state) {
+            if (state.state == 1) {
+              customSnackBar?.showLoadingSnackBar(
+                  backgroundColor: StyledColors.PRIMARY_COLOR);
+            } else if (state.state == 2) {
+              customSnackBar?.hideAll();
+              Navigator.pop(context);
             } else {
               customSnackBar?.hideAll();
             }

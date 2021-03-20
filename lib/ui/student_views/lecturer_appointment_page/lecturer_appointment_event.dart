@@ -8,3 +8,17 @@ class ErrorEvent extends LectureAppointmentEvent {
 
   ErrorEvent(this.error);
 }
+
+class ChangeRoleEvent extends LectureAppointmentEvent {
+  final int value;
+
+  ChangeRoleEvent(this.value);
+}
+
+class CreateLecturerRequest extends LectureAppointmentEvent{
+  final String purpose;
+  final String faculty;
+
+  CreateLecturerRequest(this.purpose, this.faculty);
+
+}

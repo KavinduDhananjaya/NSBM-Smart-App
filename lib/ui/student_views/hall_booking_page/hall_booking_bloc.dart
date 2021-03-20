@@ -47,6 +47,7 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
           state: "pending",
           requestedAt: Timestamp.now(),
           hallName: data.hall,
+
         );
 
         yield state.clone(state: HallBookingState.PROCESSING);
