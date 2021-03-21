@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
 import 'package:smart_app/ui/student_views/lecturer_appointment_page/lecturer_appointment_event.dart';
@@ -25,7 +27,10 @@ class LectureAppointmentViewState extends State<LectureAppointmentView> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   CustomSnackBar customSnackBar;
+
   String faculty;
+  String lecture;
+  Timestamp date;
 
   @override
   void initState() {
@@ -124,7 +129,11 @@ class LectureAppointmentViewState extends State<LectureAppointmentView> {
               items: ["kjaf", "afeafe", "atresvdg"],
               label: "Select Faculty",
               selectedItem: null,
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  faculty = value;
+                });
+              },
               showSearchBox: false,
               searchBoxDecoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -136,36 +145,56 @@ class LectureAppointmentViewState extends State<LectureAppointmentView> {
             SizedBox(
               height: 16,
             ),
-            DropdownSearch<String>(
-              mode: Mode.DIALOG,
-              maxHeight: 300,
-              items: ["kjaf", "afeafe", "atresvdg"],
-              label: "Select Lecture",
-              selectedItem: null,
-              onChanged: (value) {},
-              showSearchBox: false,
-              searchBoxDecoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                labelText: "Search User",
-              ),
-              showClearButton: true,
+            BlocBuilder<RootBloc, RootState>(
+                buildWhen: (pre, current) => pre.allLecturers != current.allLecturers,
+              builder: (context, snapshot) {
+
+                final userList = List<User>.from(snapshot.allLecturers);
+
+                final userNames = userList.map((e) => e.name).toList(growable: false);
+
+
+                return DropdownSearch<String>(
+                  mode: Mode.DIALOG,
+                  maxHeight: 300,
+                  items: userNames,
+                  label: "Select Lecture",
+                  selectedItem: null,
+                  onChanged: (value) {
+                    lecture = value;
+                  },
+                  showSearchBox: false,
+                  searchBoxDecoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                    labelText: "Search User",
+                  ),
+                  showClearButton: true,
+                );
+              }
             ),
             SizedBox(
               height: 16,
             ),
             DateTimePicker(
-              type: DateTimePickerType.date,
-              initialValue: '',
+              type: DateTimePickerType.dateTimeSeparate,
+              dateMask: 'd MMM, yyyy',
+              initialValue: DateTime.now().toString(),
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
-              dateLabelText: 'Select Date',
-              onChanged: (val) => print(val),
+              dateLabelText: 'Date',
+              timeLabelText: "Time",
+              onChanged: (val) {
+                final q = DateTime.parse(val);
+                final a = Timestamp.fromDate(q);
+                setState(() {
+                  date = a;
+                });
+              },
               validator: (val) {
                 print(val);
                 return null;
               },
-              onSaved: (val) => print(val),
             ),
             SizedBox(
               height: 32,
@@ -186,7 +215,11 @@ class LectureAppointmentViewState extends State<LectureAppointmentView> {
                 FlatButton(
                   onPressed: () {
                     lecture_appointmentBloc.add(CreateLecturerRequest(
-                        _purposeController.text, faculty));
+                      lecturer: lecture,
+                      date: date,
+                      purpose: _purposeController.text,
+                      faculty: faculty,
+                    ));
                   },
                   child: Text("Request"),
                   color: StyledColors.PRIMARY_COLOR,

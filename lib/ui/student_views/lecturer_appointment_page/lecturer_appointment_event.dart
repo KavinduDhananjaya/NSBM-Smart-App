@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -15,10 +16,11 @@ class ChangeRoleEvent extends LectureAppointmentEvent {
   ChangeRoleEvent(this.value);
 }
 
-class CreateLecturerRequest extends LectureAppointmentEvent{
+class CreateLecturerRequest extends LectureAppointmentEvent {
   final String purpose;
   final String faculty;
+  final Timestamp date;
+  final String lecturer;
 
-  CreateLecturerRequest(this.purpose, this.faculty);
-
+  CreateLecturerRequest({this.purpose, this.faculty, this.date, this.lecturer});
 }

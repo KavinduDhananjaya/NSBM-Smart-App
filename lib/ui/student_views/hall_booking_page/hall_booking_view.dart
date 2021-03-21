@@ -5,9 +5,11 @@ import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/hall_info_view/hall_info_view.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
+import 'package:smart_app/ui/common/root_page/root_state.dart';
 import 'package:smart_app/ui/student_views/hall_booking_page/hall_booking_event.dart';
 import 'hall_booking_bloc.dart';
 import 'hall_booking_state.dart';
@@ -212,41 +214,55 @@ class HallBookingViewState extends State<HallBookingView> {
             SizedBox(
               height: 16,
             ),
-            DropdownSearch<String>(
-              mode: Mode.DIALOG,
-              maxHeight: 300,
-              items: ["kjaf", "afeafe", "atresvdg"],
-              label: "Responsible Lecture",
-              selectedItem: null,
-              onChanged: (value) {
-                setState(() {
-                  lecturer = value;
-                });
-              },
-              showSearchBox: false,
-              searchBoxDecoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                labelText: "Search Lecturer",
-              ),
-              showClearButton: true,
+            BlocBuilder<RootBloc, RootState>(
+                buildWhen: (pre, current) => pre.allLecturers != current.allLecturers,
+                builder: (context, snapshot) {
+
+                  final userList = List<User>.from(snapshot.allLecturers);
+
+                  final userNames = userList.map((e) => e.name).toList(growable: false);
+
+
+                  return DropdownSearch<String>(
+                    mode: Mode.DIALOG,
+                    maxHeight: 300,
+                    items: userNames,
+                    label: "Select Lecture",
+                    selectedItem: null,
+                    onChanged: (value) {
+                      lecturer = value;
+                    },
+                    showSearchBox: false,
+                    searchBoxDecoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                      labelText: "Search User",
+                    ),
+                    showClearButton: true,
+                  );
+                }
             ),
             SizedBox(
               height: 16,
             ),
             DateTimePicker(
-              type: DateTimePickerType.date,
-              initialValue: '',
+              type: DateTimePickerType.dateTimeSeparate,
+              dateMask: 'd MMM, yyyy',
+              initialValue: DateTime.now().toString(),
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
-              dateLabelText: 'Select Date',
-              onChanged: (val) => print(val),
+              dateLabelText: 'Date',
+              timeLabelText: "Time",
+              onChanged: (val) {
+                final q = DateTime.parse(val);
+                final a = Timestamp.fromDate(q);
+                setState(() {
+                  date = a;
+                });
+              },
               validator: (val) {
                 print(val);
                 return null;
-              },
-              onSaved: (val) {
-                // currentDate = Timestamp.fromDate(val);
               },
             ),
             SizedBox(
@@ -256,7 +272,9 @@ class HallBookingViewState extends State<HallBookingView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: Text("Cancel"),
                   color: StyledColors.LIGHT_GREEN,
                 ),
@@ -270,7 +288,7 @@ class HallBookingViewState extends State<HallBookingView> {
                           purpose: _purposeController.text,
                           capacity: int.parse(_capacityController.text),
                           faculty: faculty,
-                          date: Timestamp.now(),
+                          date: date,
                         ),
                       );
                     },

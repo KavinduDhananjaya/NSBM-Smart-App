@@ -7,14 +7,10 @@ import 'package:smart_app/db/model/user.dart';
 
 @immutable
 class RootState {
-
-
-  static const ALL=0;
-  static const PENDING=1;
-  static const ASSIGNED=2;
-  static const REJECT=3;
-
-
+  static const ALL = 0;
+  static const PENDING = 1;
+  static const ASSIGNED = 2;
+  static const REJECT = 3;
 
   final String error;
   final bool userLogged;
@@ -24,6 +20,7 @@ class RootState {
   final List<Notification> assignedNotifications;
   final List<HallRequest> allHallRequests;
   final List<LectureRequest> allLecturerRequests;
+  final List<User> allLecturers;
   final int showingType;
 
   RootState({
@@ -36,6 +33,7 @@ class RootState {
     @required this.allHallRequests,
     @required this.allLecturerRequests,
     @required this.showingType,
+    @required this.allLecturers,
   });
 
   static RootState get initialState => RootState(
@@ -48,6 +46,7 @@ class RootState {
         allHallRequests: null,
         allLecturerRequests: null,
         showingType: ALL,
+        allLecturers: [],
       );
 
   RootState clone({
@@ -60,6 +59,7 @@ class RootState {
     List<HallRequest> allHallRequests,
     List<LectureRequest> allLecturerRequests,
     int showingType,
+    List<User> allLecturers,
   }) {
     return RootState(
       error: error ?? this.error,
@@ -72,6 +72,7 @@ class RootState {
       allHallRequests: allHallRequests ?? this.allHallRequests,
       allLecturerRequests: allLecturerRequests ?? this.allLecturerRequests,
       showingType: showingType ?? this.showingType,
+      allLecturers: allLecturers ?? this.allLecturers,
     );
   }
 }

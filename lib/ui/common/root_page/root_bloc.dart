@@ -39,7 +39,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   StreamSubscription _lecturerRequestSubscription;
   StreamSubscription _hallRequestSubscription;
 
-  void _getStudentByEmail(final String email) {
+  void _getUserByEmail(final String email) {
     _studentSubscription?.cancel();
     _studentSubscription = _userRepository
         .query(
@@ -98,13 +98,24 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   }
 
   void _getAllLecturerRequest(User user) {
-    _lecturesSubscription?.cancel();
-    _lecturesSubscription = _lecturerRequestRepository
+    _lecturerRequestSubscription?.cancel();
+    _lecturerRequestSubscription = _lecturerRequestRepository
         .query(
             specification: ComplexSpecification(
                 [ComplexWhere(LectureRequest.ASSIGNED, isEqualTo: user.ref)]))
         .listen((event) {
       add(ChangeAllLecturerRequests(event));
+    });
+  }
+
+  void _getAllLectures() {
+    _lecturesSubscription?.cancel();
+    _lecturesSubscription = _userRepository
+        .query(
+            specification: ComplexSpecification(
+                [ComplexWhere(User.ROLE_FIELD, isEqualTo: "lecturer")]))
+        .listen((event) {
+      add(ChangeAllLecturersEvent(event));
     });
   }
 
@@ -114,7 +125,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     }
     log.d("User logged with email: " + email);
     yield state.clone(userLogged: true);
-    _getStudentByEmail(email);
+    _getUserByEmail(email);
   }
 
   Stream<RootState> _handleUserChanged(User user) async* {
@@ -123,6 +134,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     log.d("User changed to: " + user.nsbmEmail);
     if (previous != user?.ref) {
       _getAllAssignedNotifications(user);
+      _getAllLectures();
       if (user?.role == 'student') {
         _getAllEvents();
         _getSpecialNotifications();
@@ -143,6 +155,10 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   Future<void> closeSubscriptions() async {
     await _studentSubscription?.cancel();
     await _lecturesSubscription?.cancel();
+    await _notificationSubscription?.cancel();
+    await _assignedNotificationSubscription?.cancel();
+    await _lecturerRequestSubscription?.cancel();
+    await _eventsSubscription?.cancel();
   }
 
   @override
@@ -197,6 +213,15 @@ class RootBloc extends Bloc<RootEvent, RootState> {
       case ChangeShowingType:
         final type = (event as ChangeShowingType).type;
         yield state.clone(showingType: type);
+        break;
+
+      case CreateNotificationEvent:
+        final notification = Notification();
+        await _notificationRepository.add(item: notification);
+        break;
+
+      case ChangeAllLecturersEvent:
+        yield state.clone(allLecturers: (event as ChangeAllLecturersEvent).all);
         break;
     }
   }
