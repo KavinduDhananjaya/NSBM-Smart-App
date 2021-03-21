@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
+import 'package:smart_app/ui/lecturer_views/all_appointment_page/appointment_details_page/appointment_details_page.dart';
 import 'package:smart_app/ui/widgets/hall_booking_card.dart';
 
 import 'all_appointment_bloc.dart';
@@ -62,7 +63,14 @@ class AllAppointmentView extends StatelessWidget {
                   purpose: request.purpose,
                   addedUser: request.requestedBy,
                   addedTime: request.requestedAt,
-                  action: 1,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppointmentDetailsProvider(),
+                        fullscreenDialog: true,),
+                    );
+                  },
                 );
                 all.add(card);
               }
@@ -89,7 +97,14 @@ class AllAppointmentView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
-                    action: 1,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AppointmentDetailsProvider(),
+                          fullscreenDialog: true,),
+                      );
+                    },
                   );
 
                   pending.add(card);
@@ -105,7 +120,14 @@ class AllAppointmentView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
-                    action: 1,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AppointmentDetailsProvider(),
+                          fullscreenDialog: true,),
+                      );
+                    },
                   );
                   assigned.add(card);
                 }
@@ -120,7 +142,14 @@ class AllAppointmentView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
-                    action: 1,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AppointmentDetailsProvider(),
+                          fullscreenDialog: true,),
+                      );
+                    },
                   );
                   reject.add(card);
                 }

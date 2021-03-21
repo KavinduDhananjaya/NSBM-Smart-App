@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/hall_info_view/hall_info_view.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
+import 'package:smart_app/ui/lecturer_views/lecturer_hall_booking_page/hall_booking_details_page/hall_booking_details_page.dart';
 import 'package:smart_app/ui/widgets/hall_booking_card.dart';
 
 import 'lecturer_hall_booking_bloc.dart';
@@ -20,7 +21,7 @@ class LectureHallBookingView extends StatelessWidget {
   Widget build(BuildContext context) {
     // ignore: close_sinks
     final lecture_hall_bookingBloc =
-        BlocProvider.of<LecturerHallBookingBloc>(context);
+    BlocProvider.of<LecturerHallBookingBloc>(context);
     // ignore: close_sinks
     final rootBloc = BlocProvider.of<RootBloc>(context);
     log.d("Loading LectureHallBooking View");
@@ -57,10 +58,9 @@ class LectureHallBookingView extends StatelessWidget {
       ),
       body: BlocBuilder<RootBloc, RootState>(
           buildWhen: (pre, current) =>
-              pre.allHallRequests != current.allHallRequests ||
+          pre.allHallRequests != current.allHallRequests ||
               pre.showingType != current.showingType,
           builder: (context, state) {
-
             List<Widget> all = [];
             List<Widget> pending = [];
             List<Widget> assigned = [];
@@ -74,11 +74,19 @@ class LectureHallBookingView extends StatelessWidget {
               for (int i = 0; i < state.allHallRequests.length; i++) {
                 final request = state.allHallRequests[i];
                 final card = CommonBookingCard(
-                  type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                  type: request.state == "pending" ? 2 : request.state ==
+                      "assigned" ? 0 : 1,
                   purpose: request.purpose,
                   addedUser: request.requestedBy,
                   addedTime: request.requestedAt,
-                  action: 0,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HallBookingDetailsProvider(),
+                        fullscreenDialog: true,),
+                    );
+                  },
                 );
                 all.add(card);
               }
@@ -102,17 +110,23 @@ class LectureHallBookingView extends StatelessWidget {
 
                 if (request.state == "pending") {
                   final card = CommonBookingCard(
-                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                    type: request.state == "pending" ? 2 : request.state ==
+                        "assigned" ? 0 : 1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
-                    action: 0,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HallBookingDetailsProvider(),
+                          fullscreenDialog: true,),
+                      );
+                    },
                   );
 
                   pending.add(card);
                 }
-
-
               }
             }
             else if (state.showingType == RootState.ASSIGNED) {
@@ -121,16 +135,22 @@ class LectureHallBookingView extends StatelessWidget {
 
                 if (request.state == "assigned") {
                   final card = CommonBookingCard(
-                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                    type: request.state == "pending" ? 2 : request.state ==
+                        "assigned" ? 0 : 1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
-                    action: 0,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HallBookingDetailsProvider(),
+                          fullscreenDialog: true,),
+                      );
+                    },
                   );
                   assigned.add(card);
                 }
-
-
               }
             }
             else {
@@ -139,11 +159,19 @@ class LectureHallBookingView extends StatelessWidget {
 
                 if (request.state == "rejected") {
                   final card = CommonBookingCard(
-                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                    type: request.state == "pending" ? 2 : request.state ==
+                        "assigned" ? 0 : 1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
-                    action: 0,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HallBookingDetailsProvider(),
+                          fullscreenDialog: true,),
+                      );
+                    },
                   );
                   reject.add(card);
                 }
@@ -183,7 +211,8 @@ class LectureHallBookingView extends StatelessWidget {
                     SizedBox(
                       height: 100,
                     ),
-                    Text("No Hall Requests ...",style: TextStyle(color: Colors.black),),
+                    Text("No Hall Requests ...",
+                      style: TextStyle(color: Colors.black),),
                   ],
                 ),
               );
@@ -292,10 +321,10 @@ class LectureHallBookingView extends StatelessWidget {
                       children: state.showingType == RootState.ALL
                           ? all
                           : state.showingType == RootState.PENDING
-                              ? pending
-                              : state.showingType == RootState.ASSIGNED
-                                  ? assigned
-                                  : state.showingType == RootState.REJECT?reject:[],
+                          ? pending
+                          : state.showingType == RootState.ASSIGNED
+                          ? assigned
+                          : state.showingType == RootState.REJECT ? reject : [],
                     ),
                   ),
                 ],

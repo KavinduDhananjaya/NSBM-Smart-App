@@ -10,21 +10,21 @@ import 'package:smart_app/ui/lecturer_views/lecturer_hall_booking_page/hall_book
 
 class CommonBookingCard extends StatelessWidget {
   final int type;
-  final int action;
   final DocumentReference addedUser;
   final Timestamp addedTime;
   final String purpose;
   final String hall;
+  final GestureTapCallback onTap;
 
-  CommonBookingCard({
-    Key key,
-    this.type = 0,
-    this.action = 0,
-    this.addedUser,
-    this.addedTime,
-    this.purpose = '',
-    this.hall = '',
-  }) : super(key: key);
+  CommonBookingCard(
+      {Key key,
+      this.type = 0,
+      this.addedUser,
+      this.addedTime,
+      this.purpose = '',
+      this.hall = '',
+      this.onTap})
+      : super(key: key);
 
   final addon = RepositoryAddon(repository: new UserRepository());
 
@@ -36,16 +36,7 @@ class CommonBookingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => action == 0
-                  ? HallBookingDetailsProvider()
-                  : AppointmentDetailsProvider(),
-              fullscreenDialog: true),
-        );
-      },
+      onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         padding: EdgeInsets.symmetric(horizontal: 4),
