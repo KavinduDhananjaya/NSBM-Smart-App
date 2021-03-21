@@ -41,8 +41,133 @@ class AllAppointmentView extends StatelessWidget {
         ),
       ),
       body: BlocBuilder<RootBloc, RootState>(
-          buildWhen: (pre, current) => pre.allLecturerRequests!=current.allLecturerRequests,
+          buildWhen: (pre, current) =>
+              pre.allLecturerRequests != current.allLecturerRequests ||
+              pre.showingType != current.showingType,
           builder: (context, state) {
+            List<Widget> all = [];
+            List<Widget> pending = [];
+            List<Widget> assigned = [];
+            List<Widget> reject = [];
+
+            if (state.allLecturerRequests == null) {
+              return loadingWidget;
+            }
+
+            if (state.showingType == RootState.ALL) {
+              for (int i = 0; i < state.allLecturerRequests.length; i++) {
+                final request = state.allLecturerRequests[i];
+                final card = CommonBookingCard(
+                  type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                  purpose: request.purpose,
+                  addedUser: request.requestedBy,
+                  addedTime: request.requestedAt,
+                  action: 1,
+                );
+                all.add(card);
+              }
+
+              if (all.isEmpty) {
+                all.add(
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 100,
+                      ),
+                      Text("No Requests ..."),
+                    ],
+                  ),
+                );
+              }
+            } else if (state.showingType == RootState.PENDING) {
+              for (int i = 0; i < state.allLecturerRequests.length; i++) {
+                final request = state.allLecturerRequests[i];
+
+                if (request.state == "pending") {
+                  final card = CommonBookingCard(
+                    type:request.state=="pending"?2:request.state=="assigned"?0:1,
+                    purpose: request.purpose,
+                    addedUser: request.requestedBy,
+                    addedTime: request.requestedAt,
+                    action: 1,
+                  );
+
+                  pending.add(card);
+                }
+              }
+            } else if (state.showingType == RootState.ASSIGNED) {
+              for (int i = 0; i < state.allLecturerRequests.length; i++) {
+                final request = state.allLecturerRequests[i];
+
+                if (request.state == "assigned") {
+                  final card = CommonBookingCard(
+                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                    purpose: request.purpose,
+                    addedUser: request.requestedBy,
+                    addedTime: request.requestedAt,
+                    action: 1,
+                  );
+                  assigned.add(card);
+                }
+              }
+            } else {
+              for (int i = 0; i < state.allLecturerRequests.length; i++) {
+                final request = state.allLecturerRequests[i];
+
+                if (request.state == "rejected") {
+                  final card = CommonBookingCard(
+                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                    purpose: request.purpose,
+                    addedUser: request.requestedBy,
+                    addedTime: request.requestedAt,
+                    action: 1,
+                  );
+                  reject.add(card);
+                }
+              }
+            }
+
+            if (pending.isEmpty) {
+              pending.add(
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Text("No Requests ..."),
+                  ],
+                ),
+              );
+            }
+
+            if (assigned.isEmpty) {
+              assigned.add(
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Text("No Requests ..."),
+                  ],
+                ),
+              );
+            }
+
+            if (reject.isEmpty) {
+              reject.add(
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Text(
+                      "No Requests ...",
+                    ),
+                  ],
+                ),
+              );
+            }
+
             return Container(
               width: double.infinity,
               child: Column(
@@ -55,52 +180,84 @@ class AllAppointmentView extends StatelessWidget {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: StyledColors.PRIMARY_COLOR)),
-                          height: 20,
-                          width: 80,
-                          child: Center(
-                            child: Text("All"),
+                        GestureDetector(
+                          onTap: () {
+                            rootBloc.add(ChangeShowingType(RootState.ALL));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 14, right: 6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR),
+                                color: state.showingType == RootState.ALL
+                                    ? StyledColors.LIGHT_GREEN
+                                    : null),
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text("All"),
+                            ),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: StyledColors.PRIMARY_COLOR)),
-                          height: 20,
-                          width: 80,
-                          child: Center(
-                            child: Text("Confirmed"),
+                        GestureDetector(
+                          onTap: () {
+                            rootBloc.add(ChangeShowingType(RootState.PENDING));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR),
+                                color: state.showingType == RootState.PENDING
+                                    ? StyledColors.LIGHT_GREEN
+                                    : null),
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text("Pending"),
+                            ),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: StyledColors.PRIMARY_COLOR)),
-                          height: 20,
-                          width: 80,
-                          child: Center(
-                            child: Text("Pending"),
+                        GestureDetector(
+                          onTap: () {
+                            rootBloc.add(ChangeShowingType(RootState.ASSIGNED));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR),
+                                color: state.showingType == RootState.ASSIGNED
+                                    ? StyledColors.LIGHT_GREEN
+                                    : null),
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text("Confirmed"),
+                            ),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: StyledColors.PRIMARY_COLOR)),
-                          height: 20,
-                          width: 80,
-                          child: Center(
-                            child: Text("Reject"),
+                        GestureDetector(
+                          onTap: () {
+                            rootBloc.add(ChangeShowingType(RootState.REJECT));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR),
+                                color: state.showingType == RootState.REJECT
+                                    ? StyledColors.LIGHT_GREEN
+                                    : null),
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text("Reject"),
+                            ),
                           ),
                         ),
                       ],
@@ -109,22 +266,19 @@ class AllAppointmentView extends StatelessWidget {
                   SizedBox(
                     height: 32,
                   ),
-                  CommonBookingCard(
-                    type: 0,
-                    action: 1,
+                  Expanded(
+                    child: ListView(
+                      children: state.showingType == RootState.ALL
+                          ? all
+                          : state.showingType == RootState.PENDING
+                              ? pending
+                              : state.showingType == RootState.ASSIGNED
+                                  ? assigned
+                                  : state.showingType == RootState.REJECT
+                                      ? reject
+                                      : [],
+                    ),
                   ),
-                  CommonBookingCard(
-                    type: 1,
-                    action: 1,
-                  ),
-                  CommonBookingCard(
-                    type: 1,
-                    action: 1,
-                  ),
-                  CommonBookingCard(
-                    type: 3,
-                    action: 1,
-                  )
                 ],
               ),
             );

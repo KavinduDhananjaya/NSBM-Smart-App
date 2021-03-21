@@ -74,7 +74,7 @@ class LectureHallBookingView extends StatelessWidget {
               for (int i = 0; i < state.allHallRequests.length; i++) {
                 final request = state.allHallRequests[i];
                 final card = CommonBookingCard(
-                  type: 0,
+                  type: request.state=="pending"?2:request.state=="assigned"?0:1,
                   purpose: request.purpose,
                   addedUser: request.requestedBy,
                   addedTime: request.requestedAt,
@@ -102,7 +102,7 @@ class LectureHallBookingView extends StatelessWidget {
 
                 if (request.state == "pending") {
                   final card = CommonBookingCard(
-                    type: 0,
+                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
@@ -121,7 +121,7 @@ class LectureHallBookingView extends StatelessWidget {
 
                 if (request.state == "assigned") {
                   final card = CommonBookingCard(
-                    type: 0,
+                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
@@ -139,7 +139,7 @@ class LectureHallBookingView extends StatelessWidget {
 
                 if (request.state == "rejected") {
                   final card = CommonBookingCard(
-                    type: 0,
+                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
