@@ -6,9 +6,13 @@ import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart' hide Notification;
 import 'package:smart_app/db/authentication.dart';
 import 'package:smart_app/db/model/event.dart';
+import 'package:smart_app/db/model/hall_request.dart';
+import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/notification.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/event_repository.dart';
+import 'package:smart_app/db/repository/hall_request_repository.dart';
+import 'package:smart_app/db/repository/lecturer_request_repository.dart';
 import 'package:smart_app/db/repository/notification_repository.dart';
 import 'package:smart_app/db/repository/user_repository.dart';
 
@@ -23,6 +27,8 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   final _userRepository = UserRepository();
   final _eventRepository = EventRepository();
   final _notificationRepository = NotificationRepository();
+  final _lecturerRequestRepository = LectureRequestRepository();
+  final _hallRequestRepository = HallRequestRepository();
 
   final auth = Authentication();
   StreamSubscription _studentSubscription;
@@ -30,6 +36,8 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   StreamSubscription _eventsSubscription;
   StreamSubscription _notificationSubscription;
   StreamSubscription _assignedNotificationSubscription;
+  StreamSubscription _lecturerRequestSubscription;
+  StreamSubscription _hallRequestSubscription;
 
   void _getStudentByEmail(final String email) {
     _studentSubscription?.cancel();
@@ -78,6 +86,28 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     });
   }
 
+  void _getAllHallRequest(User user) {
+    _hallRequestSubscription?.cancel();
+    _hallRequestSubscription = _hallRequestRepository
+        .query(
+            specification: ComplexSpecification(
+                [ComplexWhere(HallRequest.ASSIGNED, isEqualTo: user.ref)]))
+        .listen((event) {
+      add(ChangeAllHallRequests(event));
+    });
+  }
+
+  void _getAllLecturerRequest(User user) {
+    _lecturesSubscription?.cancel();
+    _lecturesSubscription = _lecturerRequestRepository
+        .query(
+            specification: ComplexSpecification(
+                [ComplexWhere(LectureRequest.ASSIGNED, isEqualTo: user.ref)]))
+        .listen((event) {
+      add(ChangeAllLecturerRequests(event));
+    });
+  }
+
   Stream<RootState> _handleUserLogged(String email) async* {
     if (state.userLogged) {
       return;
@@ -92,12 +122,15 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     yield state.clone(currentUser: user);
     log.d("User changed to: " + user.nsbmEmail);
     if (previous != user?.ref) {
+      _getAllAssignedNotifications(user);
       if (user?.role == 'student') {
         _getAllEvents();
         _getSpecialNotifications();
-        _getAllAssignedNotifications(user);
       }
-      if (user?.role == 'lecturer') {}
+      if (user?.role == 'lecturer') {
+        _getAllHallRequest(user);
+        _getAllLecturerRequest(user);
+      }
     }
   }
 
@@ -149,6 +182,21 @@ class RootBloc extends Bloc<RootEvent, RootState> {
       case ChangeAllSpecialNotice:
         final all = (event as ChangeAllSpecialNotice).all;
         yield state.clone(specialNotices: all);
+        break;
+
+      case ChangeAllHallRequests:
+        final all = (event as ChangeAllHallRequests).all;
+        yield state.clone(allHallRequests: all);
+        break;
+
+      case ChangeAllLecturerRequests:
+        final all = (event as ChangeAllLecturerRequests).all;
+        yield state.clone(allLecturerRequests: all);
+        break;
+
+      case ChangeShowingType:
+        final type = (event as ChangeShowingType).type;
+        yield state.clone(showingType: type);
         break;
     }
   }

@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart' hide Notification;
 import 'package:smart_app/db/model/event.dart';
+import 'package:smart_app/db/model/hall_request.dart';
+import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/notification.dart';
 import 'package:smart_app/db/model/user.dart';
 
 @immutable
 class RootState {
+
+
+  static const ALL=0;
+  static const PENDING=1;
+  static const ASSIGNED=2;
+  static const REJECT=3;
+
+
+
   final String error;
   final bool userLogged;
   final User currentUser;
   final List<Event> allEvents;
   final List<Notification> specialNotices;
   final List<Notification> assignedNotifications;
+  final List<HallRequest> allHallRequests;
+  final List<LectureRequest> allLecturerRequests;
+  final int showingType;
 
   RootState({
     @required this.error,
@@ -19,6 +33,9 @@ class RootState {
     @required this.allEvents,
     @required this.assignedNotifications,
     @required this.specialNotices,
+    @required this.allHallRequests,
+    @required this.allLecturerRequests,
+    @required this.showingType,
   });
 
   static RootState get initialState => RootState(
@@ -28,6 +45,9 @@ class RootState {
         allEvents: null,
         assignedNotifications: null,
         specialNotices: null,
+        allHallRequests: null,
+        allLecturerRequests: null,
+        showingType: ALL,
       );
 
   RootState clone({
@@ -37,6 +57,9 @@ class RootState {
     List<Event> allEvents,
     List<Notification> specialNotices,
     List<Notification> assignedNotifications,
+    List<HallRequest> allHallRequests,
+    List<LectureRequest> allLecturerRequests,
+    int showingType,
   }) {
     return RootState(
       error: error ?? this.error,
@@ -46,6 +69,9 @@ class RootState {
       specialNotices: specialNotices ?? this.specialNotices,
       assignedNotifications:
           assignedNotifications ?? this.assignedNotifications,
+      allHallRequests: allHallRequests ?? this.allHallRequests,
+      allLecturerRequests: allLecturerRequests ?? this.allLecturerRequests,
+      showingType: showingType ?? this.showingType,
     );
   }
 }

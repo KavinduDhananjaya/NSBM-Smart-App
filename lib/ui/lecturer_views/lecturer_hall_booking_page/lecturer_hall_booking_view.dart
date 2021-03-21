@@ -55,9 +55,140 @@ class LectureHallBookingView extends StatelessWidget {
           ),
         ),
       ),
-      body: BlocBuilder<LecturerHallBookingBloc, LecturerHallBookingState>(
-          buildWhen: (pre, current) => true,
+      body: BlocBuilder<RootBloc, RootState>(
+          buildWhen: (pre, current) =>
+              pre.allHallRequests != current.allHallRequests ||
+              pre.showingType != current.showingType,
           builder: (context, state) {
+
+            List<Widget> all = [];
+            List<Widget> pending = [];
+            List<Widget> assigned = [];
+            List<Widget> reject = [];
+
+            if (state.allHallRequests == null) {
+              return loadingWidget;
+            }
+
+            if (state.showingType == RootState.ALL) {
+              for (int i = 0; i < state.allHallRequests.length; i++) {
+                final request = state.allHallRequests[i];
+                final card = CommonBookingCard(
+                  type: 0,
+                  purpose: request.purpose,
+                  addedUser: request.requestedBy,
+                  addedTime: request.requestedAt,
+                  action: 0,
+                );
+                all.add(card);
+              }
+
+              if (all.isEmpty) {
+                all.add(
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 100,
+                      ),
+                      Text("No Hall Requests ..."),
+                    ],
+                  ),
+                );
+              }
+            }
+            else if (state.showingType == RootState.PENDING) {
+              for (int i = 0; i < state.allHallRequests.length; i++) {
+                final request = state.allHallRequests[i];
+
+                if (request.state == "pending") {
+                  final card = CommonBookingCard(
+                    type: 0,
+                    purpose: request.purpose,
+                    addedUser: request.requestedBy,
+                    addedTime: request.requestedAt,
+                    action: 0,
+                  );
+
+                  pending.add(card);
+                }
+
+
+              }
+            }
+            else if (state.showingType == RootState.ASSIGNED) {
+              for (int i = 0; i < state.allHallRequests.length; i++) {
+                final request = state.allHallRequests[i];
+
+                if (request.state == "assigned") {
+                  final card = CommonBookingCard(
+                    type: 0,
+                    purpose: request.purpose,
+                    addedUser: request.requestedBy,
+                    addedTime: request.requestedAt,
+                    action: 0,
+                  );
+                  assigned.add(card);
+                }
+
+
+              }
+            }
+            else {
+              for (int i = 0; i < state.allHallRequests.length; i++) {
+                final request = state.allHallRequests[i];
+
+                if (request.state == "rejected") {
+                  final card = CommonBookingCard(
+                    type: 0,
+                    purpose: request.purpose,
+                    addedUser: request.requestedBy,
+                    addedTime: request.requestedAt,
+                    action: 0,
+                  );
+                  reject.add(card);
+                }
+              }
+            }
+
+            if (pending.isEmpty) {
+              pending.add(
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Text("No Hall Requests ..."),
+                  ],
+                ),
+              );
+            }
+
+            if (assigned.isEmpty) {
+              assigned.add(
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Text("No Hall Requests ..."),
+                  ],
+                ),
+              );
+            }
+
+            if (reject.isEmpty) {
+              reject.add(
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Text("No Hall Requests ...",style: TextStyle(color: Colors.black),),
+                  ],
+                ),
+              );
+            }
+
             return Container(
               width: double.infinity,
               child: Column(
@@ -70,62 +201,103 @@ class LectureHallBookingView extends StatelessWidget {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: StyledColors.PRIMARY_COLOR)
-                          ),
-                          height: 20,
-                          width: 80,
-                          child: Center(
-                            child: Text("All"),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: StyledColors.PRIMARY_COLOR)
-                          ),
-                          height: 20,
-                          width: 80,
-                          child: Center(
-                            child: Text("Confirmed"),
+                        GestureDetector(
+                          onTap: () {
+                            rootBloc.add(ChangeShowingType(RootState.ALL));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 14, right: 6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR),
+                                color: state.showingType == RootState.ALL
+                                    ? StyledColors.LIGHT_GREEN
+                                    : null),
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text("All"),
+                            ),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: StyledColors.PRIMARY_COLOR)
-                          ),
-                          height: 20,
-                          width: 80,
-                          child: Center(
-                            child: Text("Pending"),
+                        GestureDetector(
+                          onTap: () {
+                            rootBloc.add(ChangeShowingType(RootState.PENDING));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR),
+                                color: state.showingType == RootState.PENDING
+                                    ? StyledColors.LIGHT_GREEN
+                                    : null),
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text("Pending"),
+                            ),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: StyledColors.PRIMARY_COLOR)
+                        GestureDetector(
+                          onTap: () {
+                            rootBloc.add(ChangeShowingType(RootState.ASSIGNED));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR),
+                                color: state.showingType == RootState.ASSIGNED
+                                    ? StyledColors.LIGHT_GREEN
+                                    : null),
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text("Confirmed"),
+                            ),
                           ),
-                          height: 20,
-                          width: 80,
-                          child: Center(
-                            child: Text("Reject"),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            rootBloc.add(ChangeShowingType(RootState.REJECT));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR),
+                                color: state.showingType == RootState.REJECT
+                                    ? StyledColors.LIGHT_GREEN
+                                    : null),
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text("Reject"),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 32,),
-                  HallBookingCard(type: 0,),
-                  HallBookingCard(type: 1,),
-                  HallBookingCard(type: 1,),
-                  HallBookingCard(type: 3,)
+                  SizedBox(
+                    height: 32,
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: state.showingType == RootState.ALL
+                          ? all
+                          : state.showingType == RootState.PENDING
+                              ? pending
+                              : state.showingType == RootState.ASSIGNED
+                                  ? assigned
+                                  : state.showingType == RootState.REJECT?reject:[],
+                    ),
+                  ),
                 ],
               ),
             );

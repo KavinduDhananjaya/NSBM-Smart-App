@@ -61,12 +61,17 @@ class NotificationView extends StatelessWidget {
           }
 
           if (children.isEmpty) {
-            children.add(Center(
-              child: Text(
-                "No Notifications..",
-                style: TextStyle(fontSize: 17, color: StyledColors.DARK_BLUE),
+            children.add(
+              Column(
+                children: [
+                  SizedBox(height: 100,),
+                  Text(
+                    "No Notifications..",
+                    style: TextStyle(fontSize: 17, color: StyledColors.DARK_BLUE),
+                  ),
+                ],
               ),
-            ));
+            );
           }
 
           return ListView(children: children);

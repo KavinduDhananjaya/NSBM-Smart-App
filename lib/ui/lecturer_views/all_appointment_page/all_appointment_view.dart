@@ -40,8 +40,8 @@ class AllAppointmentView extends StatelessWidget {
           ),
         ),
       ),
-      body: BlocBuilder<AllAppointmentBloc, AllAppointmentState>(
-          buildWhen: (pre, current) => true,
+      body: BlocBuilder<RootBloc, RootState>(
+          buildWhen: (pre, current) => pre.allLecturerRequests!=current.allLecturerRequests,
           builder: (context, state) {
             return Container(
               width: double.infinity,
@@ -109,19 +109,19 @@ class AllAppointmentView extends StatelessWidget {
                   SizedBox(
                     height: 32,
                   ),
-                  HallBookingCard(
+                  CommonBookingCard(
                     type: 0,
                     action: 1,
                   ),
-                  HallBookingCard(
+                  CommonBookingCard(
                     type: 1,
                     action: 1,
                   ),
-                  HallBookingCard(
+                  CommonBookingCard(
                     type: 1,
                     action: 1,
                   ),
-                  HallBookingCard(
+                  CommonBookingCard(
                     type: 3,
                     action: 1,
                   )
