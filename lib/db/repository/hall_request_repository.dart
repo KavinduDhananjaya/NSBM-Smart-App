@@ -55,6 +55,20 @@ class HallRequestRepository extends FirebaseRepository<HallRequest> {
   }
 
   @override
+  Future<DocumentReference> update({
+    @required HallRequest item,
+    String type,
+    DocumentReference parent,
+    MapperCallback<HallRequest> mapper,
+  }) {
+    return super.update(
+      item: item,
+      type: DBUtil.HALL_REQUEST,
+      mapper: mapper,
+    );
+  }
+
+  @override
   Future<DocumentReference> add({
     @required HallRequest item,
     String type,

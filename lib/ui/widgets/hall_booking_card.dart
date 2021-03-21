@@ -42,14 +42,15 @@ class CommonBookingCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 4),
         width: double.infinity,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(
-              color: type == 0
-                  ? Colors.green.withOpacity(0.7)
-                  : type == 1
-                      ? Colors.red.withOpacity(0.4)
-                      : Colors.blue.withOpacity(0.6),
-            )),
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            color: type == 0
+                ? Colors.green.withOpacity(0.7)
+                : type == 1
+                    ? Colors.red.withOpacity(0.4)
+                    : Colors.blue.withOpacity(0.6),
+          ),
+        ),
         height: 70,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,

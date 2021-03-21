@@ -83,7 +83,7 @@ class LectureHallBookingView extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HallBookingDetailsProvider(),
+                        builder: (context) => HallBookingDetailsProvider(request: request,),
                         fullscreenDialog: true,),
                     );
                   },
@@ -119,7 +119,7 @@ class LectureHallBookingView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HallBookingDetailsProvider(),
+                          builder: (context) => HallBookingDetailsProvider(request: request,),
                           fullscreenDialog: true,),
                       );
                     },
@@ -144,7 +144,7 @@ class LectureHallBookingView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HallBookingDetailsProvider(),
+                          builder: (context) => HallBookingDetailsProvider(request: request,),
                           fullscreenDialog: true,),
                       );
                     },
@@ -168,7 +168,7 @@ class LectureHallBookingView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HallBookingDetailsProvider(),
+                          builder: (context) => HallBookingDetailsProvider(request: request,),
                           fullscreenDialog: true,),
                       );
                     },

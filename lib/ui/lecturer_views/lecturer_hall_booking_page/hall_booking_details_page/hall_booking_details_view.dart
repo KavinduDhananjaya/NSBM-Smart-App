@@ -1,8 +1,11 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
+import 'package:smart_app/ui/lecturer_views/lecturer_hall_booking_page/hall_booking_details_page/hall_booking_details_event.dart';
 
 import 'hall_booking_details_bloc.dart';
 import 'hall_booking_details_state.dart';
@@ -13,6 +16,10 @@ class HallBookingDetailsView extends StatelessWidget {
     child: CircularProgressIndicator(),
   );
 
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final HallRequest request;
+
+  CustomSnackBar customSnackBar;
   final titleStyle = TextStyle(
     color: StyledColors.DARK_BLUE,
     fontSize: 20,
@@ -25,6 +32,8 @@ class HallBookingDetailsView extends StatelessWidget {
     fontWeight: FontWeight.w400,
   );
 
+  HallBookingDetailsView({Key key, @required this.request}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
@@ -34,8 +43,14 @@ class HallBookingDetailsView extends StatelessWidget {
     final rootBloc = BlocProvider.of<RootBloc>(context);
     log.d("Loading HallBookingDetails View");
 
-    CustomSnackBar customSnackBar;
+    customSnackBar = CustomSnackBar(scaffoldKey: scaffoldKey);
+
+    final dueDate = DateFormat("dd/MM/yyyy").format(request.date.toDate());
+    final dueTime = new DateFormat.jm().format(request.date.toDate());
+
+
     final scaffold = Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         brightness: Brightness.light,
         elevation: 0,
@@ -62,7 +77,10 @@ class HallBookingDetailsView extends StatelessWidget {
                   SizedBox(
                     height: 24,
                   ),
-                  Text("Student / Club or Organizations",style: titleStyle,),
+                  Text(
+                    "${request.type}",
+                    style: titleStyle,
+                  ),
                   SizedBox(
                     height: 32,
                   ),
@@ -76,7 +94,7 @@ class HallBookingDetailsView extends StatelessWidget {
                         width: 16,
                       ),
                       Text(
-                        "Faculty",
+                        "${request.faculty}",
                         style: subtitleStyle,
                       ),
                     ],
@@ -90,9 +108,10 @@ class HallBookingDetailsView extends StatelessWidget {
                       "Purpose",
                       style: titleStyle,
                     ),
-                    subtitle: Text(" The passage is attributed to an unknown typesetter in the 15th century who is"
-                        " thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book.",
-                    style: subtitleStyle,),
+                    subtitle: Text(
+                      request.purpose,
+                      style: subtitleStyle,
+                    ),
                   ),
                   SizedBox(
                     height: 24,
@@ -107,7 +126,7 @@ class HallBookingDetailsView extends StatelessWidget {
                         width: 16,
                       ),
                       Text(
-                        "2012/12/11",
+                        "${dueDate}  ${dueTime}",
                         style: subtitleStyle,
                       ),
                     ],
@@ -125,7 +144,7 @@ class HallBookingDetailsView extends StatelessWidget {
                         width: 16,
                       ),
                       Text(
-                        "124",
+                        "${request.capacity.toString()}",
                         style: subtitleStyle,
                       ),
                     ],
@@ -148,15 +167,30 @@ class HallBookingDetailsView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 48,),
-                  Row(
+                  SizedBox(
+                    height: 48,
+                  ),
+                  request.state=="pending"?Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FlatButton(onPressed: (){}, child: Text("Reject"),color: StyledColors.LIGHT_GREEN,),
-                      SizedBox(width: 16,),
-                      FlatButton(onPressed: (){}, child: Text("Confirm"),color: StyledColors.PRIMARY_COLOR),
+                      FlatButton(
+                        onPressed: () {
+                          hall_booking_detailsBloc.add(RejectEvent(request));
+                        },
+                        child: Text("Reject"),
+                        color: StyledColors.LIGHT_GREEN,
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      FlatButton(
+                          onPressed: () {
+                            hall_booking_detailsBloc.add(ConfirmEvent(request));
+                          },
+                          child: Text("Confirm"),
+                          color: StyledColors.PRIMARY_COLOR),
                     ],
-                  ),
+                  ):Container(),
                 ],
               ),
             );
@@ -170,6 +204,20 @@ class HallBookingDetailsView extends StatelessWidget {
           listener: (context, state) {
             if (state.error?.isNotEmpty ?? false) {
               customSnackBar?.showErrorSnackBar(state.error);
+            } else {
+              customSnackBar?.hideAll();
+            }
+          },
+        ),
+        BlocListener<HallBookingDetailsBloc, HallBookingDetailsState>(
+          listenWhen: (pre, current) => pre.state != current.state,
+          listener: (context, state) {
+            if (state.state == 1) {
+              customSnackBar?.showLoadingSnackBar(
+                  backgroundColor: StyledColors.PRIMARY_COLOR);
+            } else if (state.state == 2) {
+              customSnackBar?.hideAll();
+              Navigator.pop(context);
             } else {
               customSnackBar?.hideAll();
             }
