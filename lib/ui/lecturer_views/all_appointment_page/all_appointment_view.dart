@@ -59,7 +59,11 @@ class AllAppointmentView extends StatelessWidget {
               for (int i = 0; i < state.allLecturerRequests.length; i++) {
                 final request = state.allLecturerRequests[i];
                 final card = CommonBookingCard(
-                  type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                  type: request.state == "pending"
+                      ? 2
+                      : request.state == "assigned"
+                          ? 0
+                          : 1,
                   purpose: request.purpose,
                   addedUser: request.requestedBy,
                   addedTime: request.requestedAt,
@@ -67,8 +71,11 @@ class AllAppointmentView extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AppointmentDetailsProvider(),
-                        fullscreenDialog: true,),
+                        builder: (context) => AppointmentDetailsProvider(
+                          request: request,
+                        ),
+                        fullscreenDialog: true,
+                      ),
                     );
                   },
                 );
@@ -93,7 +100,11 @@ class AllAppointmentView extends StatelessWidget {
 
                 if (request.state == "pending") {
                   final card = CommonBookingCard(
-                    type:request.state=="pending"?2:request.state=="assigned"?0:1,
+                    type: request.state == "pending"
+                        ? 2
+                        : request.state == "assigned"
+                            ? 0
+                            : 1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
@@ -101,8 +112,11 @@ class AllAppointmentView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AppointmentDetailsProvider(),
-                          fullscreenDialog: true,),
+                          builder: (context) => AppointmentDetailsProvider(
+                            request: request,
+                          ),
+                          fullscreenDialog: true,
+                        ),
                       );
                     },
                   );
@@ -116,7 +130,11 @@ class AllAppointmentView extends StatelessWidget {
 
                 if (request.state == "assigned") {
                   final card = CommonBookingCard(
-                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                    type: request.state == "pending"
+                        ? 2
+                        : request.state == "assigned"
+                            ? 0
+                            : 1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
@@ -124,8 +142,11 @@ class AllAppointmentView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AppointmentDetailsProvider(),
-                          fullscreenDialog: true,),
+                          builder: (context) => AppointmentDetailsProvider(
+                            request: request,
+                          ),
+                          fullscreenDialog: true,
+                        ),
                       );
                     },
                   );
@@ -138,7 +159,11 @@ class AllAppointmentView extends StatelessWidget {
 
                 if (request.state == "rejected") {
                   final card = CommonBookingCard(
-                    type: request.state=="pending"?2:request.state=="assigned"?0:1,
+                    type: request.state == "pending"
+                        ? 2
+                        : request.state == "assigned"
+                            ? 0
+                            : 1,
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
@@ -146,8 +171,11 @@ class AllAppointmentView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AppointmentDetailsProvider(),
-                          fullscreenDialog: true,),
+                          builder: (context) => AppointmentDetailsProvider(
+                            request: request,
+                          ),
+                          fullscreenDialog: true,
+                        ),
                       );
                     },
                   );

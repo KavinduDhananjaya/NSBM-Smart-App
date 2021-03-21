@@ -1,17 +1,36 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
+import 'package:smart_app/ui/lecturer_views/all_appointment_page/appointment_details_page/appointment_details_page.dart';
 
 import 'appointment_details_bloc.dart';
 import 'appointment_details_state.dart';
 
-class AppointmentDetailsView extends StatelessWidget {
+class AppointmentDetailsView extends StatefulWidget {
+  final LectureRequest request;
+
+  AppointmentDetailsView({
+    Key key,
+    @required this.request,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => AppointmentDetailsViewState();
+}
+
+class AppointmentDetailsViewState extends State<AppointmentDetailsView> {
   static final log = Log("LectureAppointmentDetailsView");
   static final loadingWidget = Center(
     child: CircularProgressIndicator(),
   );
+
+  final _msgController = TextEditingController();
+  CustomSnackBar customSnackBar;
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final titleStyle = TextStyle(
     color: StyledColors.DARK_BLUE,
@@ -34,8 +53,18 @@ class AppointmentDetailsView extends StatelessWidget {
     final rootBloc = BlocProvider.of<RootBloc>(context);
     log.d("Loading LectureAppointmentDetails View");
 
-    CustomSnackBar customSnackBar;
+    if (widget.request == null) {
+      return loadingWidget;
+    }
+
+    customSnackBar = CustomSnackBar(scaffoldKey: scaffoldKey);
+
+    final dueDate =
+        DateFormat("dd/MM/yyyy").format(widget.request.date.toDate());
+    final dueTime = new DateFormat.jm().format(widget.request.date.toDate());
+
     final scaffold = Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         brightness: Brightness.light,
         elevation: 0,
@@ -67,8 +96,7 @@ class AppointmentDetailsView extends StatelessWidget {
                   style: titleStyle,
                 ),
                 subtitle: Text(
-                  " The passage is attributed to an unknown typesetter in the 15th century who is"
-                  " thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book.",
+                  widget.request.purpose,
                   style: subtitleStyle,
                 ),
               ),
@@ -85,7 +113,7 @@ class AppointmentDetailsView extends StatelessWidget {
                     width: 16,
                   ),
                   Text(
-                    "2012/12/11",
+                    "${dueDate}  ${dueTime}",
                     style: subtitleStyle,
                   ),
                 ],
@@ -93,35 +121,55 @@ class AppointmentDetailsView extends StatelessWidget {
               SizedBox(
                 height: 30,
               ),
-              TextFormField(
+              widget.request.state == "pending"?TextFormField(
                 textCapitalization: TextCapitalization.none,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(labelText: "Message"),
                 onFieldSubmitted: (value) {},
+                controller: _msgController,
                 maxLines: 4,
-
+              ):ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  "Message",
+                  style: titleStyle,
+                ),
+                subtitle: Text(
+                  widget.request.message==null?" ":widget.request.message,
+                  style: subtitleStyle,
+                ),
               ),
               SizedBox(
                 height: 48,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FlatButton(
-                    onPressed: () {},
-                    child: Text("Reject"),
-                    color: StyledColors.LIGHT_GREEN,
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  FlatButton(
-                      onPressed: () {},
-                      child: Text("Confirm"),
-                      color: StyledColors.PRIMARY_COLOR),
-                ],
-              ),
+              widget.request.state == "pending"
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                          onPressed: () {
+                            lecture_appointment_detailsBloc
+                                .add(RejectEvent(widget.request));
+                          },
+                          child: Text("Reject"),
+                          color: StyledColors.LIGHT_GREEN,
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        FlatButton(
+                            onPressed: () {
+                              lecture_appointment_detailsBloc.add(
+                                ConfirmEvent(
+                                    widget.request, _msgController.text),
+                              );
+                            },
+                            child: Text("Confirm"),
+                            color: StyledColors.PRIMARY_COLOR),
+                      ],
+                    )
+                  : Container(),
             ],
           ),
         ),
@@ -130,12 +178,25 @@ class AppointmentDetailsView extends StatelessWidget {
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<AppointmentDetailsBloc,
-            AppointmentDetailsState>(
+        BlocListener<AppointmentDetailsBloc, AppointmentDetailsState>(
           listenWhen: (pre, current) => pre.error != current.error,
           listener: (context, state) {
             if (state.error?.isNotEmpty ?? false) {
               customSnackBar?.showErrorSnackBar(state.error);
+            } else {
+              customSnackBar?.hideAll();
+            }
+          },
+        ),
+        BlocListener<AppointmentDetailsBloc, AppointmentDetailsState>(
+          listenWhen: (pre, current) => pre.state != current.state,
+          listener: (context, state) {
+            if (state.state == 1) {
+              customSnackBar?.showLoadingSnackBar(
+                  backgroundColor: StyledColors.PRIMARY_COLOR);
+            } else if (state.state == 2) {
+              customSnackBar?.hideAll();
+              Navigator.pop(context);
             } else {
               customSnackBar?.hideAll();
             }

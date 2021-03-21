@@ -56,6 +56,17 @@ class LectureRequestRepository extends FirebaseRepository<LectureRequest> {
   }
 
   @override
+  Future<DocumentReference> update({
+    @required LectureRequest item,
+    String type,
+    DocumentReference parent,
+    MapperCallback<LectureRequest> mapper,
+  }) {
+    return super
+        .update(item: item, type: DBUtil.LECTURER_REQUEST, mapper: mapper);
+  }
+
+  @override
   Future<DocumentReference> add({
     @required LectureRequest item,
     String type,
