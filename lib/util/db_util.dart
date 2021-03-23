@@ -6,5 +6,6 @@ abstract class DBUtil {
   static const String HALL_REQUEST='HallRequests';
   static const String LECTURER_REQUEST='LecturerRequests';
   static const String NOTIFICATION='Notifications';
+  static const String HALL='Halls';
 
 }

@@ -66,7 +66,13 @@ class ChangeShowingType extends RootEvent {
   ChangeShowingType(this.type);
 }
 
-class CreateNotificationEvent extends RootEvent {}
+class CreateNotificationEvent extends RootEvent {
+  final User assigned;
+  final String title;
+  final int type;
+
+  CreateNotificationEvent(this.assigned, this.title, this.type);
+}
 
 class ChangeAllLecturersEvent extends RootEvent {
   final List<User> all;

@@ -6,6 +6,7 @@ import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/db/model/hall_request.dart';
+import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/hall_request_repository.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
 
@@ -18,7 +19,9 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
   final hallRequestRepo = HallRequestRepository();
   final RootBloc rootBloc;
 
-  HallBookingBloc(BuildContext context) : rootBloc=BlocProvider.of<RootBloc>(context),super(HallBookingState.initialState);
+  HallBookingBloc(BuildContext context)
+      : rootBloc = BlocProvider.of<RootBloc>(context),
+        super(HallBookingState.initialState);
 
   @override
   Stream<HallBookingState> mapEventToState(HallBookingEvent event) async* {
@@ -36,18 +39,40 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
         break;
 
       case CreateHallRequestEvent:
-        final data=(event as CreateHallRequestEvent);
+        final data = (event as CreateHallRequestEvent);
+
+        final allUsers = rootBloc.state.allLecturers;
+        final userName = data.lecturer;
+        User lecturer;
+
+        if (data.faculty == null || data.faculty.isEmpty) {
+          add(ErrorEvent("Please Select Faculty.."));
+          break;
+        }
+
+        if (userName == null || userName.isEmpty) {
+          add(ErrorEvent("Please Select Lecturer.."));
+          break;
+        }
+
+        if (allUsers != null) {
+          if (userName.isNotEmpty) {
+            lecturer =
+                allUsers.firstWhere((element) => element.name == userName);
+          }
+        }
 
         final hallBooking = HallRequest(
-          type: state.type==1?"Student":"Club or Organization",
+          type: state.type == 1 ? "Student" : "Club or Organization",
           faculty: data.faculty,
           capacity: data.capacity,
           purpose: data.purpose,
-          requestedBy:rootBloc.state.currentUser.ref,
+          requestedBy: rootBloc.state.currentUser.ref,
           state: "pending",
           requestedAt: Timestamp.now(),
           hallName: data.hall,
-
+          assigned: lecturer.ref,
+          date: data.date,
         );
 
         yield state.clone(state: HallBookingState.PROCESSING);

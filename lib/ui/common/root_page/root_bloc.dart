@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart' hide Notification;
@@ -216,8 +217,22 @@ class RootBloc extends Bloc<RootEvent, RootState> {
         break;
 
       case CreateNotificationEvent:
-        final notification = Notification();
-        await _notificationRepository.add(item: notification);
+        final data = (event as CreateNotificationEvent);
+
+        final notification = Notification(
+          title: data.title,
+          type: data.type == 0 ? "onlyUser" : "all",
+          createdBy: state.currentUser.ref,
+          createdAt: Timestamp.now(),
+          targetUser: data.assigned.ref,
+        );
+
+        try {
+          await _notificationRepository.add(item: notification);
+        } catch (e) {
+          print(e);
+        }
+
         break;
 
       case ChangeAllLecturersEvent:
