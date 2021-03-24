@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/hall.dart';
 import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/hall_request_repository.dart';
@@ -42,13 +43,29 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
         final data = (event as CreateHallRequestEvent);
 
         final allUsers = rootBloc.state.allLecturers;
+        final allHalls = rootBloc.state.allHalls;
         final userName = data.lecturer;
         User lecturer;
+        Hall hall;
 
         if (data.faculty == null || data.faculty.isEmpty) {
           add(ErrorEvent("Please Select Faculty.."));
           break;
         }
+
+        print(data.hall);
+        if (data.hall == null || data.hall.isEmpty) {
+          add(ErrorEvent("Please Select Hall.."));
+          break;
+        }
+
+        if (allHalls != null) {
+          if (data.hall.isNotEmpty) {
+            hall = allHalls.firstWhere(
+                    (element) => element.hallNumber == int.parse(data.hall));
+          }
+        }
+
 
         if (userName == null || userName.isEmpty) {
           add(ErrorEvent("Please Select Lecturer.."));
@@ -62,6 +79,10 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
           }
         }
 
+
+
+
+
         final hallBooking = HallRequest(
           type: state.type == 1 ? "Student" : "Club or Organization",
           faculty: data.faculty,
@@ -70,7 +91,7 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
           requestedBy: rootBloc.state.currentUser.ref,
           state: "pending",
           requestedAt: Timestamp.now(),
-          hallName: data.hall,
+          hall: hall.ref,
           assigned: lecturer.ref,
           date: data.date,
         );

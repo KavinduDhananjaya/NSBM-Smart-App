@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Notification;
 import 'package:smart_app/db/model/event.dart';
+import 'package:smart_app/db/model/hall.dart';
 import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/notification.dart';
@@ -78,4 +79,10 @@ class ChangeAllLecturersEvent extends RootEvent {
   final List<User> all;
 
   ChangeAllLecturersEvent(this.all);
+}
+
+class ChangeAllHallsEvent extends RootEvent {
+  final List<Hall> all;
+
+  ChangeAllHallsEvent(this.all);
 }

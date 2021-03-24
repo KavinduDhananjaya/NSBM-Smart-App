@@ -7,11 +7,13 @@ import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart' hide Notification;
 import 'package:smart_app/db/authentication.dart';
 import 'package:smart_app/db/model/event.dart';
+import 'package:smart_app/db/model/hall.dart';
 import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/notification.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/event_repository.dart';
+import 'package:smart_app/db/repository/hall_repository.dart';
 import 'package:smart_app/db/repository/hall_request_repository.dart';
 import 'package:smart_app/db/repository/lecturer_request_repository.dart';
 import 'package:smart_app/db/repository/notification_repository.dart';
@@ -30,6 +32,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   final _notificationRepository = NotificationRepository();
   final _lecturerRequestRepository = LectureRequestRepository();
   final _hallRequestRepository = HallRequestRepository();
+  final _hallRepository = HallRepository();
 
   final auth = Authentication();
   StreamSubscription _studentSubscription;
@@ -39,6 +42,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   StreamSubscription _assignedNotificationSubscription;
   StreamSubscription _lecturerRequestSubscription;
   StreamSubscription _hallRequestSubscription;
+  StreamSubscription _hallSubscription;
 
   void _getUserByEmail(final String email) {
     _studentSubscription?.cancel();
@@ -120,6 +124,17 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     });
   }
 
+  void _getAllHalls() {
+    _hallSubscription?.cancel();
+    _hallSubscription = _hallRepository
+        .query(
+            specification: ComplexSpecification(
+                [ComplexWhere(Hall.IS_AVAILABLE, isEqualTo: true)]))
+        .listen((event) {
+      add(ChangeAllHallsEvent(event));
+    });
+  }
+
   Stream<RootState> _handleUserLogged(String email) async* {
     if (state.userLogged) {
       return;
@@ -136,6 +151,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     if (previous != user?.ref) {
       _getAllAssignedNotifications(user);
       _getAllLectures();
+      _getAllHalls();
       if (user?.role == 'student') {
         _getAllEvents();
         _getSpecialNotifications();
@@ -160,6 +176,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     await _assignedNotificationSubscription?.cancel();
     await _lecturerRequestSubscription?.cancel();
     await _eventsSubscription?.cancel();
+    await _hallSubscription?.cancel();
   }
 
   @override
@@ -237,6 +254,10 @@ class RootBloc extends Bloc<RootEvent, RootState> {
 
       case ChangeAllLecturersEvent:
         yield state.clone(allLecturers: (event as ChangeAllLecturersEvent).all);
+        break;
+
+      case ChangeAllHallsEvent:
+        yield state.clone(allHalls: (event as ChangeAllHallsEvent).all);
         break;
     }
   }

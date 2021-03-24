@@ -11,7 +11,7 @@ class HallRequest extends DBModel {
   static const CONFIRMED_BY = 'confirmedBy';
   static const REQUESTED_AT = 'requestedAt';
   static const REQUESTED_BY = 'requestedBy';
-  static const HALL_NAME = 'hallName';
+  static const HALL = 'hall';
   static const FACULTY = 'faculty';
   static const STATE = 'state';
 
@@ -24,7 +24,7 @@ class HallRequest extends DBModel {
   DocumentReference confirmedBy;
   Timestamp requestedAt;
   DocumentReference requestedBy;
-  String hallName;
+  DocumentReference hall;
   String faculty;
   String state;
 
@@ -39,7 +39,7 @@ class HallRequest extends DBModel {
     this.confirmedBy,
     this.requestedAt,
     this.requestedBy,
-    this.hallName,
+    this.hall,
     this.faculty,
     this.state,
   }) : super(ref: ref);
@@ -56,7 +56,7 @@ class HallRequest extends DBModel {
     DocumentReference confirmedBy,
     Timestamp requestedAt,
     DocumentReference requestedBy,
-    String hallName,
+    DocumentReference hall,
     String faculty,
     String state,
   }) {
@@ -64,7 +64,7 @@ class HallRequest extends DBModel {
       ref: ref ?? this.ref,
       type: type ?? this.type,
       state: state ?? this.state,
-      hallName: hallName ?? this.hallName,
+      hall: hall ?? this.hall,
       purpose: purpose ?? this.purpose,
       capacity: capacity ?? this.capacity,
       faculty: faculty ?? this.faculty,

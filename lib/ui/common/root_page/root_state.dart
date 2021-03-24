@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Notification;
 import 'package:smart_app/db/model/event.dart';
+import 'package:smart_app/db/model/hall.dart';
 import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/notification.dart';
@@ -21,6 +22,7 @@ class RootState {
   final List<HallRequest> allHallRequests;
   final List<LectureRequest> allLecturerRequests;
   final List<User> allLecturers;
+  final List<Hall> allHalls;
   final int showingType;
 
   RootState({
@@ -34,6 +36,7 @@ class RootState {
     @required this.allLecturerRequests,
     @required this.showingType,
     @required this.allLecturers,
+    @required this.allHalls,
   });
 
   static RootState get initialState => RootState(
@@ -47,6 +50,7 @@ class RootState {
         allLecturerRequests: null,
         showingType: ALL,
         allLecturers: [],
+        allHalls: [],
       );
 
   RootState clone({
@@ -60,6 +64,7 @@ class RootState {
     List<LectureRequest> allLecturerRequests,
     int showingType,
     List<User> allLecturers,
+    List<Hall> allHalls,
   }) {
     return RootState(
       error: error ?? this.error,
@@ -73,6 +78,7 @@ class RootState {
       allLecturerRequests: allLecturerRequests ?? this.allLecturerRequests,
       showingType: showingType ?? this.showingType,
       allLecturers: allLecturers ?? this.allLecturers,
+      allHalls: allHalls ?? this.allHalls,
     );
   }
 }

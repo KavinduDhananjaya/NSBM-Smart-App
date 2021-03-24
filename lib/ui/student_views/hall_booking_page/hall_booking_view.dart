@@ -5,12 +5,14 @@ import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/hall.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/hall_info_view/hall_info_view.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
 import 'package:smart_app/ui/common/root_page/root_state.dart';
 import 'package:smart_app/ui/student_views/hall_booking_page/hall_booking_event.dart';
+import 'package:smart_app/util/routes.dart';
 import 'hall_booking_bloc.dart';
 import 'hall_booking_state.dart';
 
@@ -61,7 +63,7 @@ class HallBookingViewState extends State<HallBookingView> {
   String faculty;
   String hall;
   String lecturer;
-  Timestamp date;
+  Timestamp date=Timestamp.now();
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +164,7 @@ class HallBookingViewState extends State<HallBookingView> {
             DropdownSearch<String>(
               mode: Mode.DIALOG,
               maxHeight: 300,
-              items: ["kjaf", "afeafe", "atresvdg"],
+              items: Routes.faculties,
               label: "Select Faculty",
               selectedItem: null,
               onChanged: (value) {
@@ -170,7 +172,7 @@ class HallBookingViewState extends State<HallBookingView> {
                   faculty = value;
                 });
               },
-              showSearchBox: false,
+              showSearchBox: true,
               searchBoxDecoration: InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
@@ -192,36 +194,47 @@ class HallBookingViewState extends State<HallBookingView> {
             SizedBox(
               height: 16,
             ),
-            DropdownSearch<String>(
-              mode: Mode.DIALOG,
-              maxHeight: 300,
-              items: ["kjaf", "afeafe", "atresvdg"],
-              label: "Available Halls",
-              selectedItem: null,
-              onChanged: (value) {
-                setState(() {
-                  hall = value;
-                });
-              },
-              showSearchBox: false,
-              searchBoxDecoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                labelText: "Search Hall",
-              ),
-              showClearButton: true,
-            ),
+            BlocBuilder<RootBloc, RootState>(
+                buildWhen: (pre, current) => pre.allHalls != current.allHalls,
+                builder: (context, snapshot) {
+                  final hallList = List<Hall>.from(snapshot.allHalls);
+
+                  final hallNumbers =
+                      hallList.map((e) => e.hallNumber).toList(growable: false);
+
+                  return DropdownSearch<String>(
+                    mode: Mode.DIALOG,
+                    maxHeight: 300,
+                    items: hallNumbers
+                        .map((e) => e.toString())
+                        .toList(growable: false),
+                    label: "Available Halls",
+                    selectedItem: null,
+                    onChanged: (value) {
+                      setState(() {
+                        hall = value;
+                      });
+                    },
+                    showSearchBox: true,
+                    searchBoxDecoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                      labelText: "Search Hall",
+                    ),
+                    showClearButton: true,
+                  );
+                }),
             SizedBox(
               height: 16,
             ),
             BlocBuilder<RootBloc, RootState>(
-                buildWhen: (pre, current) => pre.allLecturers != current.allLecturers,
+                buildWhen: (pre, current) =>
+                    pre.allLecturers != current.allLecturers,
                 builder: (context, snapshot) {
-
                   final userList = List<User>.from(snapshot.allLecturers);
 
-                  final userNames = userList.map((e) => e.name).toList(growable: false);
-
+                  final userNames =
+                      userList.map((e) => e.name).toList(growable: false);
 
                   return DropdownSearch<String>(
                     mode: Mode.DIALOG,
@@ -232,7 +245,7 @@ class HallBookingViewState extends State<HallBookingView> {
                     onChanged: (value) {
                       lecturer = value;
                     },
-                    showSearchBox: false,
+                    showSearchBox: true,
                     searchBoxDecoration: InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
@@ -240,8 +253,7 @@ class HallBookingViewState extends State<HallBookingView> {
                     ),
                     showClearButton: true,
                   );
-                }
-            ),
+                }),
             SizedBox(
               height: 16,
             ),
@@ -286,9 +298,13 @@ class HallBookingViewState extends State<HallBookingView> {
                       hall_bookingBloc.add(
                         CreateHallRequestEvent(
                           purpose: _purposeController.text,
-                          capacity: int.parse(_capacityController.text),
+                          capacity: _capacityController.text.isEmpty
+                              ? 0
+                              : int.parse(_capacityController.text ?? 0),
                           faculty: faculty,
                           date: date,
+                          lecturer: lecturer,
+                          hall: hall,
                         ),
                       );
                     },

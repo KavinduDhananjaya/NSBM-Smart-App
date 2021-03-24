@@ -5,6 +5,8 @@ import 'package:smart_app/ui/common/login_page/login_page.dart';
 abstract class Routes {
   Routes._();
 
+  static List<String> faculties=["CSE","Management","Tech","Art","Electronic"];
+
   static const LOGIN_ROUTE = "login";
   static const HOME_ROUTE = "home";
 
