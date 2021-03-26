@@ -4,6 +4,7 @@ import 'package:smart_app/db/model/hall.dart';
 import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/notification.dart';
+import 'package:smart_app/db/model/time_table.dart';
 import 'package:smart_app/db/model/user.dart';
 
 @immutable
@@ -24,6 +25,7 @@ class RootState {
   final List<User> allLecturers;
   final List<Hall> allHalls;
   final int showingType;
+  final TimeTable todayTimetable;
 
   RootState({
     @required this.error,
@@ -37,6 +39,7 @@ class RootState {
     @required this.showingType,
     @required this.allLecturers,
     @required this.allHalls,
+    @required this.todayTimetable,
   });
 
   static RootState get initialState => RootState(
@@ -51,6 +54,7 @@ class RootState {
         showingType: ALL,
         allLecturers: [],
         allHalls: [],
+        todayTimetable: null,
       );
 
   RootState clone({
@@ -65,6 +69,7 @@ class RootState {
     int showingType,
     List<User> allLecturers,
     List<Hall> allHalls,
+    TimeTable todayTimetable,
   }) {
     return RootState(
       error: error ?? this.error,
@@ -72,13 +77,13 @@ class RootState {
       currentUser: currentUser ?? this.currentUser,
       allEvents: allEvents ?? this.allEvents,
       specialNotices: specialNotices ?? this.specialNotices,
-      assignedNotifications:
-          assignedNotifications ?? this.assignedNotifications,
+      assignedNotifications: assignedNotifications ?? this.assignedNotifications,
       allHallRequests: allHallRequests ?? this.allHallRequests,
       allLecturerRequests: allLecturerRequests ?? this.allLecturerRequests,
       showingType: showingType ?? this.showingType,
       allLecturers: allLecturers ?? this.allLecturers,
       allHalls: allHalls ?? this.allHalls,
+      todayTimetable: todayTimetable ?? this.todayTimetable,
     );
   }
 }

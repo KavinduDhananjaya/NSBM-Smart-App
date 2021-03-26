@@ -8,6 +8,7 @@ import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
 import 'package:smart_app/ui/student_views/lecturer_appointment_page/lecturer_appointment_event.dart';
+import 'package:smart_app/util/routes.dart';
 
 import 'lecturer_appointment_bloc.dart';
 import 'lecturer_appointment_state.dart';
@@ -30,7 +31,7 @@ class LectureAppointmentViewState extends State<LectureAppointmentView> {
 
   String faculty;
   String lecture;
-  Timestamp date;
+  Timestamp date=Timestamp.now();
 
   @override
   void initState() {
@@ -126,7 +127,7 @@ class LectureAppointmentViewState extends State<LectureAppointmentView> {
             DropdownSearch<String>(
               mode: Mode.DIALOG,
               maxHeight: 300,
-              items: ["kjaf", "afeafe", "atresvdg"],
+              items: Routes.faculties,
               label: "Select Faculty",
               selectedItem: null,
               onChanged: (value) {

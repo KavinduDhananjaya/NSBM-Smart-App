@@ -21,13 +21,6 @@ class MapViewState extends State<MapView> {
     child: CircularProgressIndicator(),
   );
 
-  // Completer<GoogleMapController> _controller = Completer();
-
-  static const LatLng _center = const LatLng(45.521563, -122.677433);
-
-  void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
-  }
 
   Completer<GoogleMapController> _controller = Completer();
 
@@ -76,6 +69,7 @@ class MapViewState extends State<MapView> {
       ),
       body: GoogleMap(
         mapType: MapType.hybrid,
+        indoorViewEnabled: true,
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);

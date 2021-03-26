@@ -21,5 +21,6 @@ public final class GeneratedPluginRegistrant {
     flutterEngine.getPlugins().add(new io.flutter.plugins.googlemaps.GoogleMapsPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.pathprovider.PathProviderPlugin());
     flutterEngine.getPlugins().add(new bsi.iceman.searchable_dropdown.SearchableDropdownPlugin());
+    flutterEngine.getPlugins().add(new io.flutter.plugins.urllauncher.UrlLauncherPlugin());
   }
 }

@@ -4,6 +4,7 @@ import 'package:smart_app/db/model/hall.dart';
 import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/notification.dart';
+import 'package:smart_app/db/model/time_table.dart';
 import 'package:smart_app/db/model/user.dart';
 
 @immutable
@@ -85,4 +86,10 @@ class ChangeAllHallsEvent extends RootEvent {
   final List<Hall> all;
 
   ChangeAllHallsEvent(this.all);
+}
+
+class ChangeTodayTimetable extends RootEvent {
+  final TimeTable data;
+
+  ChangeTodayTimetable(this.data);
 }

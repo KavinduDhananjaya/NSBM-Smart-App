@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart' hide Notification;
@@ -11,12 +12,14 @@ import 'package:smart_app/db/model/hall.dart';
 import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/notification.dart';
+import 'package:smart_app/db/model/time_table.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/event_repository.dart';
 import 'package:smart_app/db/repository/hall_repository.dart';
 import 'package:smart_app/db/repository/hall_request_repository.dart';
 import 'package:smart_app/db/repository/lecturer_request_repository.dart';
 import 'package:smart_app/db/repository/notification_repository.dart';
+import 'package:smart_app/db/repository/time_table_repository.dart';
 import 'package:smart_app/db/repository/user_repository.dart';
 
 import 'root_event.dart';
@@ -27,12 +30,15 @@ class RootBloc extends Bloc<RootEvent, RootState> {
 
   RootBloc(BuildContext context) : super(RootState.initialState);
 
+  final today = new DateFormat("yyyy-MM-dd").format(DateTime.now());
+
   final _userRepository = UserRepository();
   final _eventRepository = EventRepository();
   final _notificationRepository = NotificationRepository();
   final _lecturerRequestRepository = LectureRequestRepository();
   final _hallRequestRepository = HallRequestRepository();
   final _hallRepository = HallRepository();
+  final _timeTableRepository = TimeTableRepository();
 
   final auth = Authentication();
   StreamSubscription _studentSubscription;
@@ -43,6 +49,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   StreamSubscription _lecturerRequestSubscription;
   StreamSubscription _hallRequestSubscription;
   StreamSubscription _hallSubscription;
+  StreamSubscription _timetableSubscription;
 
   void _getUserByEmail(final String email) {
     _studentSubscription?.cancel();
@@ -135,6 +142,19 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     });
   }
 
+  void _getTodayTimeTable() {
+    _timetableSubscription?.cancel();
+    _timeTableRepository
+        .query(
+            specification: ComplexSpecification(
+                [ComplexWhere(TimeTable.DATE, isEqualTo: today)]))
+        .listen((event) {
+      if (event.length > 0) {
+        add(ChangeTodayTimetable(event[0]));
+      }
+    });
+  }
+
   Stream<RootState> _handleUserLogged(String email) async* {
     if (state.userLogged) {
       return;
@@ -152,6 +172,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
       _getAllAssignedNotifications(user);
       _getAllLectures();
       _getAllHalls();
+      _getTodayTimeTable();
       if (user?.role == 'student') {
         _getAllEvents();
         _getSpecialNotifications();
@@ -177,6 +198,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     await _lecturerRequestSubscription?.cancel();
     await _eventsSubscription?.cancel();
     await _hallSubscription?.cancel();
+    await _timetableSubscription?.cancel();
   }
 
   @override
@@ -187,6 +209,15 @@ class RootBloc extends Bloc<RootEvent, RootState> {
         log.e('Error: $error');
         yield state.clone(error: "");
         yield state.clone(error: error);
+        break;
+
+      case ChangeTodayTimetable:
+        final data = (event as ChangeTodayTimetable).data;
+
+        if (data != null) {
+          yield state.clone(todayTimetable: data);
+        }
+
         break;
 
       case UserLoggedEvent:

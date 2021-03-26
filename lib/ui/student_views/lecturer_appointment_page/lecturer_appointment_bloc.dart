@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:smart_app/db/model/lecturer_request.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/lecturer_request_repository.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
+import 'package:smart_app/ui/common/root_page/root_page.dart' as r;
 
 import 'lecturer_appointment_event.dart';
 import 'lecturer_appointment_state.dart';
@@ -78,6 +80,11 @@ class LectureAppointmentBloc
         try {
           await lecturerReqRepo.add(item: request);
           yield state.clone(state: LectureAppointmentState.COMPLETE);
+          final date = new DateFormat("yyyy-MM-dd").format(data.date.toDate());
+
+          final time = new DateFormat.jm().format(data.date.toDate());
+
+          rootBloc.add(r.CreateNotificationEvent(lecturer, "Requested a Appointment at ${date} ${time}", 0));
         } catch (e) {
           yield state.clone(state: LectureAppointmentState.INITIAL);
         }

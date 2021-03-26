@@ -10,6 +10,7 @@ import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/hall_request_repository.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
+import 'package:smart_app/ui/common/root_page/root_event.dart' as r;
 
 import 'hall_booking_event.dart';
 import 'hall_booking_state.dart';
@@ -62,10 +63,9 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
         if (allHalls != null) {
           if (data.hall.isNotEmpty) {
             hall = allHalls.firstWhere(
-                    (element) => element.hallNumber == int.parse(data.hall));
+                (element) => element.hallNumber == int.parse(data.hall));
           }
         }
-
 
         if (userName == null || userName.isEmpty) {
           add(ErrorEvent("Please Select Lecturer.."));
@@ -78,10 +78,6 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
                 allUsers.firstWhere((element) => element.name == userName);
           }
         }
-
-
-
-
 
         final hallBooking = HallRequest(
           type: state.type == 1 ? "Student" : "Club or Organization",
@@ -100,6 +96,7 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
         try {
           await hallRequestRepo.add(item: hallBooking);
           yield state.clone(state: HallBookingState.COMPLETE);
+          rootBloc.add(r.CreateNotificationEvent(lecturer, "Requested ${data.hall} hall for ${data.purpose}", 0));
         } catch (e) {
           yield state.clone(state: HallBookingState.INITIAL);
         }

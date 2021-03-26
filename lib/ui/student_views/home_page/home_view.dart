@@ -8,6 +8,7 @@ import 'package:smart_app/ui/student_views/hall_booking_page/hall_booking_page.d
 import 'package:smart_app/ui/student_views/lecturer_appointment_page/lecturer_appointment_page.dart';
 import 'package:smart_app/ui/student_views/time_table_page/time_table_page.dart';
 import 'package:smart_app/ui/widgets/home_page_app_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'home_bloc.dart';
 import 'home_state.dart';
@@ -19,6 +20,10 @@ class HomeView extends StatelessWidget {
   );
 
   final textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
+
+
+  void _launchURL(String url) async =>
+      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +108,7 @@ class HomeView extends StatelessWidget {
                             ),
                             child: Container(
                               width: double.infinity,
-                              height: 120,
+                              height: 130,
                               padding: EdgeInsets.symmetric(
                                   vertical: 16, horizontal: 16),
                               child: Column(
@@ -112,6 +117,7 @@ class HomeView extends StatelessWidget {
                                     "Hall Booking",
                                     style: textStyle,
                                   ),
+                                  SizedBox(height: 10,),
                                   Icon(
                                     Icons.view_compact_outlined,
                                     color: Colors.grey,
@@ -146,6 +152,7 @@ class HomeView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Container(
+                              height: 130,
                               width: double.infinity,
                               padding: EdgeInsets.symmetric(
                                   vertical: 16, horizontal: 16),
@@ -156,7 +163,7 @@ class HomeView extends StatelessWidget {
                                     style: textStyle,
                                   ),
                                   SizedBox(
-                                    height: 8,
+                                    height: 10,
                                   ),
                                   Icon(
                                     Icons.event,
@@ -185,6 +192,7 @@ class HomeView extends StatelessWidget {
                           ),
                           child: Container(
                             width: double.infinity,
+                            height: 130,
                             padding: EdgeInsets.symmetric(
                                 vertical: 16, horizontal: 16),
                             child: Column(
@@ -221,12 +229,13 @@ class HomeView extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MapProvider(),
-                                fullscreenDialog: true),
-                          );
+                          _launchURL("https://www.google.lk/maps/place/NSBM+Green+University+Town/@6.8212859,80.0398974,17.75z/data=!4m5!3m4!1s0x3ae2523b05555555:0x546c34cd99f6f488!8m2!3d6.8213291!4d80.0415729");
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => MapProvider(),
+                          //       fullscreenDialog: true),
+                          // );
                         },
                         child: Card(
                           elevation: 5,
@@ -235,6 +244,7 @@ class HomeView extends StatelessWidget {
                           ),
                           child: Container(
                             width: double.infinity,
+                            height: 130 ,
                             padding: EdgeInsets.symmetric(
                                 vertical: 16, horizontal: 16),
                             child: Column(

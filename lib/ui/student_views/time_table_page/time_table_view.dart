@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/user.dart';
+import 'package:smart_app/db/repository/user_repository.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
 
@@ -13,6 +17,13 @@ class TimeTableView extends StatelessWidget {
     child: CircularProgressIndicator(),
   );
 
+  final addon = RepositoryAddon(repository: new UserRepository());
+
+  Future<User> getUser(DocumentReference ref) async {
+    final user = await addon.fetch(ref: ref);
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
@@ -23,7 +34,7 @@ class TimeTableView extends StatelessWidget {
 
     CustomSnackBar customSnackBar;
     final scaffold = Scaffold(
-     appBar: AppBar(
+      appBar: AppBar(
         brightness: Brightness.light,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -38,11 +49,73 @@ class TimeTableView extends StatelessWidget {
           ),
         ),
       ),
-      body: BlocBuilder<TimeTableBloc, TimeTableState>(
-          buildWhen: (pre, current) => true,
+      body: BlocBuilder<RootBloc, RootState>(
+          buildWhen: (pre, current) =>
+              pre.todayTimetable != current.todayTimetable,
           builder: (context, state) {
-            return Center(
-              child: Text("HI..."),
+
+            if (state.todayTimetable == null) {
+              return Center(child: Text("No Today TimeTable"));
+            }
+
+            List<DataRow> rows = [];
+            for (int i = 0; i < state.todayTimetable.content.length; i++) {
+              final cotent = state.todayTimetable.content[i];
+
+              final dataRow = DataRow(cells: [
+                DataCell(
+                  Text(cotent['module']),
+                ),
+                DataCell(
+                  Text(cotent['batch']),
+                ),
+                DataCell(
+                  Text(cotent['hallNumber']),
+                ),
+                DataCell(
+                  FutureBuilder(
+                    future: getUser(cotent['lecturer']),
+                    builder: (context, snapshot) {
+                      return Text(
+                        snapshot.hasData ? snapshot.data.name : "-",
+                      );
+                    }, // The widget using the data
+                  ),
+                ),
+              ]);
+
+              rows.add(dataRow);
+            }
+
+            return Container(
+              width: double.infinity,
+              margin: EdgeInsets.all(0),
+              child: Scrollbar(
+                child: DataTable(
+                  columnSpacing: 3,
+                  dataRowHeight: 50,
+                  dividerThickness: 2,
+                  columns: [
+                    DataColumn(
+                        label: Text('Module',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold))),
+                    DataColumn(
+                        label: Text('Batch',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold))),
+                    DataColumn(
+                        label: Text('Hall Number',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold))),
+                    DataColumn(
+                        label: Text('Lecturer',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold))),
+                  ],
+                  rows: rows,
+                ),
+              ),
             );
           }),
     );

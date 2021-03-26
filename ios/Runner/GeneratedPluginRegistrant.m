@@ -46,6 +46,12 @@
 @import searchable_dropdown;
 #endif
 
+#if __has_include(<url_launcher/FLTURLLauncherPlugin.h>)
+#import <url_launcher/FLTURLLauncherPlugin.h>
+#else
+@import url_launcher;
+#endif
+
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
@@ -56,6 +62,7 @@
   [FLTGoogleMapsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleMapsPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [SearchableDropdownPlugin registerWithRegistrar:[registry registrarForPlugin:@"SearchableDropdownPlugin"]];
+  [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];
 }
 
 @end
