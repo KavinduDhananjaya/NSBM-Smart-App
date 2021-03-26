@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_app/util/routes.dart';
 
 class NotificationCard extends StatelessWidget {
   final String title;
@@ -47,7 +48,7 @@ class NotificationCard extends StatelessWidget {
             SizedBox(
               width: 60,
               child: Text(
-                getTime(createdAt),
+                Routes.timeAgoSinceDate(createdAt.toDate()),
                 style: TextStyle(
                     fontSize: 12, color: Colors.black87.withOpacity(0.4)),
               ),
