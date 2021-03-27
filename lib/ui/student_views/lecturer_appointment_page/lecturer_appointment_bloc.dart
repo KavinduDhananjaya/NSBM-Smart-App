@@ -84,7 +84,7 @@ class LectureAppointmentBloc
 
           final time = new DateFormat.jm().format(data.date.toDate());
 
-          rootBloc.add(r.CreateNotificationEvent(lecturer, "Requested a Appointment at ${date} ${time}", 0));
+          rootBloc.add(r.CreateNotificationEvent(lecturer.ref, "Requested a Appointment at ${date} ${time}", 0));
         } catch (e) {
           yield state.clone(state: LectureAppointmentState.INITIAL);
         }

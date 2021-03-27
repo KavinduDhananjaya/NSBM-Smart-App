@@ -96,7 +96,7 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
         try {
           await hallRequestRepo.add(item: hallBooking);
           yield state.clone(state: HallBookingState.COMPLETE);
-          rootBloc.add(r.CreateNotificationEvent(lecturer, "Requested ${data.hall} hall for ${data.purpose}", 0));
+          rootBloc.add(r.CreateNotificationEvent(lecturer.ref, "Requested ${data.hall} hall for ${data.purpose}", 0));
         } catch (e) {
           yield state.clone(state: HallBookingState.INITIAL);
         }

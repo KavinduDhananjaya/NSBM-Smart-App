@@ -272,7 +272,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
           type: data.type == 0 ? "onlyUser" : "all",
           createdBy: state.currentUser.ref,
           createdAt: Timestamp.now(),
-          targetUser: data.assigned.ref,
+          targetUser: data.assigned,
         );
 
         try {

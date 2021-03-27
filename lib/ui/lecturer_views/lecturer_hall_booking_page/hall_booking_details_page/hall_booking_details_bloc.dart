@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/db/model/hall_request.dart';
 import 'package:smart_app/db/repository/hall_request_repository.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
+import 'package:smart_app/ui/common/root_page/root_event.dart' as r;
 
 import 'hall_booking_details_event.dart';
 import 'hall_booking_details_state.dart';
@@ -48,6 +49,8 @@ class HallBookingDetailsBloc
               HallRequest.STATE: "assigned",
             },
           );
+
+          rootBloc.add(r.CreateNotificationEvent(req.requestedBy, "Your Hall Request is Confirmed", 0));
 
           yield state.clone(state: 2);
         } catch (e) {

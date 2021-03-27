@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart' hide Notification;
 import 'package:smart_app/db/model/event.dart';
 import 'package:smart_app/db/model/hall.dart';
@@ -69,7 +70,7 @@ class ChangeShowingType extends RootEvent {
 }
 
 class CreateNotificationEvent extends RootEvent {
-  final User assigned;
+  final DocumentReference assigned;
   final String title;
   final int type;
 
