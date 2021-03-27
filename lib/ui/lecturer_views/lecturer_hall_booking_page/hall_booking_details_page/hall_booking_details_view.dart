@@ -190,7 +190,7 @@ class HallBookingDetailsView extends StatelessWidget {
                           child: Text("Confirm"),
                           color: StyledColors.PRIMARY_COLOR),
                     ],
-                  ):Container(),
+                  ):request.state=="rejected"?Text("Rejected",style: TextStyle(color: Colors.red),):Container(),
                 ],
               ),
             );

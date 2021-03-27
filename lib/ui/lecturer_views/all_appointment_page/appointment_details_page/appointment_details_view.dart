@@ -169,7 +169,7 @@ class AppointmentDetailsViewState extends State<AppointmentDetailsView> {
                             color: StyledColors.PRIMARY_COLOR),
                       ],
                     )
-                  : Container(),
+                  : widget.request.state=="rejected"?Text("Rejected",style: TextStyle(color: Colors.red),):Container(),
             ],
           ),
         ),
