@@ -93,7 +93,7 @@ class HomeView extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 16,
+                height: 24,
               ),
               Row(
                 children: [
@@ -121,7 +121,7 @@ class HomeView extends StatelessWidget {
                                   Icon(
                                     Icons.view_compact_outlined,
                                     color: Colors.grey,
-                                    size: 50,
+                                    size: 60,
                                   ),
                                 ],
                               ),
@@ -168,7 +168,7 @@ class HomeView extends StatelessWidget {
                                   Icon(
                                     Icons.event,
                                     color: Colors.grey,
-                                    size: 50,
+                                    size: 60,
                                   ),
                                 ],
                               ),

@@ -67,6 +67,8 @@ class AllAppointmentView extends StatelessWidget {
                   purpose: request.purpose,
                   addedUser: request.requestedBy,
                   addedTime: request.requestedAt,
+                  isHallReq: false,
+                  requestedDate: request.date,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -108,6 +110,8 @@ class AllAppointmentView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
+                    isHallReq: false,
+                    requestedDate: request.date,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -138,6 +142,8 @@ class AllAppointmentView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
+                    isHallReq: false,
+                    requestedDate: request.date,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -167,6 +173,8 @@ class AllAppointmentView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
+                    isHallReq: false,
+                    requestedDate: request.date,
                     onTap: () {
                       Navigator.push(
                         context,

@@ -13,15 +13,7 @@ class NotificationCard extends StatelessWidget {
     this.createdAt,
   }) : super(key: key);
 
-  String getTime(Timestamp time) {
-    final today = Timestamp.now();
-    final diff = today.toDate().difference(time.toDate()).inMinutes;
 
-    if (diff < 60) {
-      return "$diff min ago";
-    }
-    return "";
-  }
 
   @override
   Widget build(BuildContext context) {

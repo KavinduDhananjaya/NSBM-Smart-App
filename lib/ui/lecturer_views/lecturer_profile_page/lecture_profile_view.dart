@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
+import 'package:smart_app/util/routes.dart';
 
 import 'lecture_profile_bloc.dart';
 import 'lecture_profile_state.dart';
@@ -139,6 +140,8 @@ class LecturerProfileView extends StatelessWidget {
                   FlatButton(
                     onPressed: () {
                       rootBloc.add(UserLoggedOutEvent());
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Routes.LOGIN_ROUTE, (route) => false);
                     },
                     child: Text(
                       "LOGOUT",

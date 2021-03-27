@@ -79,6 +79,8 @@ class LectureHallBookingView extends StatelessWidget {
                   purpose: request.purpose,
                   addedUser: request.requestedBy,
                   addedTime: request.requestedAt,
+                  hall: request.hall,
+                  isHallReq: true,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -115,6 +117,8 @@ class LectureHallBookingView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
+                    hall: request.hall,
+                    isHallReq: true,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -140,6 +144,8 @@ class LectureHallBookingView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
+                    hall: request.hall,
+                    isHallReq: true,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -164,6 +170,8 @@ class LectureHallBookingView extends StatelessWidget {
                     purpose: request.purpose,
                     addedUser: request.requestedBy,
                     addedTime: request.requestedAt,
+                    hall: request.hall,
+                    isHallReq: true,
                     onTap: () {
                       Navigator.push(
                         context,

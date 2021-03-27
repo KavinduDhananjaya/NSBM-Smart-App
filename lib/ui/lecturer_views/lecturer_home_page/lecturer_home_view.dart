@@ -96,7 +96,7 @@ class LecturerHomeView extends StatelessWidget {
                             ),
                             child: Container(
                               width: double.infinity,
-                              height: 120,
+                              height: 130,
                               padding: EdgeInsets.symmetric(
                                   vertical: 16, horizontal: 16),
                               child: Column(
