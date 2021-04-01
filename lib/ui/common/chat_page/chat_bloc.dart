@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/repository/chat_room_repository.dart';
+import 'package:smart_app/ui/common/root_page/root_bloc.dart';
 
 import 'chat_event.dart';
 import 'chat_state.dart';
@@ -10,7 +14,27 @@ import 'chat_state.dart';
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   static final log = Log("ChatBloc");
 
-  ChatBloc(BuildContext context) : super(ChatState.initialState);
+  final RootBloc rootBloc;
+  final repo = ChatRoomRepository();
+  StreamSubscription chatRoomSubscription;
+
+  ChatBloc(BuildContext context)
+      : rootBloc = BlocProvider.of<RootBloc>(context),
+        super(ChatState.initialState) {
+    _getAllChatRooms();
+  }
+
+  void _getAllChatRooms() {
+    chatRoomSubscription?.cancel();
+    chatRoomSubscription = repo
+        .query(
+            specification: ComplexSpecification([
+      ComplexWhere('users', arrayContainsAny: [rootBloc.state?.currentUser?.ref])
+    ]))
+        .listen((event) {
+      add(ChangeChatRooms(event));
+    });
+  }
 
   @override
   Stream<ChatState> mapEventToState(ChatEvent event) async* {
@@ -20,6 +44,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         log.e('Error: $error');
         yield state.clone(error: "");
         yield state.clone(error: error);
+        break;
+
+      case ChangeChatRooms:
+        final all = (event as ChangeChatRooms).all;
+        yield state.clone(chatRooms: all);
         break;
     }
   }
@@ -34,7 +63,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   @override
   Future<void> close() async {
+    chatRoomSubscription?.cancel();
     await super.close();
+
   }
 
   void _addErr(e) {
