@@ -13,17 +13,18 @@ class ChatRoomRepository extends FirebaseRepository<ChatRoom> {
     if (data == null) return null;
 
     return ChatRoom(
-      ref: snapshot.reference,
-      users: List.from(
-        data['users'] ?? [],
-      ),
-    );
+        ref: snapshot.reference,
+        users: List.from(data[ChatRoom.USERS] ?? []),
+        lastMsg: data[ChatRoom.LAST_MESSAGE] ?? '',
+        lastMsgAt: data[ChatRoom.LAST_MESSAGE_AT]);
   }
 
   @override
   Map<String, dynamic> toMap(ChatRoom item) {
     return {
-      'users': item.users,
+      ChatRoom.USERS: item.users,
+      ChatRoom.LAST_MESSAGE: item.lastMsg,
+      ChatRoom.LAST_MESSAGE_AT: item.lastMsgAt,
     };
   }
 
@@ -43,5 +44,15 @@ class ChatRoomRepository extends FirebaseRepository<ChatRoom> {
     DocumentReference parent,
   }) {
     return super.add(item: item, type: DBUtil.CHAT_ROOM);
+  }
+
+  @override
+  Future<DocumentReference> update({
+    @required ChatRoom item,
+    String type,
+    DocumentReference parent,
+    MapperCallback<ChatRoom> mapper,
+  }) {
+    return super.update(item: item, type: DBUtil.CHAT_ROOM, mapper: mapper);
   }
 }

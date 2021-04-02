@@ -1,7 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/chat_page/chat_detail_page/chat_detail_page.dart';
+import 'package:smart_app/ui/common/chat_page/chat_page.dart';
 import 'package:smart_app/ui/common/chat_page/new/database.dart';
+import 'package:smart_app/ui/common/root_page/root_bloc.dart';
+import 'package:smart_app/ui/common/root_page/root_page.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -13,103 +19,12 @@ class _SearchState extends State<Search> {
   TextEditingController searchEditingController = new TextEditingController();
   QuerySnapshot searchResultSnapshot;
 
+  static final loadingWidget = Center(
+    child: CircularProgressIndicator(),
+  );
+
   bool isLoading = false;
   bool haveUserSearched = false;
-
-  initiateSearch() async {
-    if (searchEditingController.text.isNotEmpty) {
-      setState(() {
-        isLoading = true;
-      });
-      await databaseMethods
-          .searchByName(searchEditingController.text)
-          .then((snapshot) {
-        searchResultSnapshot = snapshot;
-        print("$searchResultSnapshot");
-        setState(() {
-          isLoading = false;
-          haveUserSearched = true;
-        });
-      });
-    }
-  }
-
-  Widget userList() {
-    return haveUserSearched
-        ? ListView.builder(
-            shrinkWrap: true,
-            itemCount: searchResultSnapshot.docs.length,
-            itemBuilder: (context, index) {
-              return userTile(
-                searchResultSnapshot.docs[index].data()["userName"],
-                searchResultSnapshot.docs[index].data()["userEmail"],
-              );
-            })
-        : Container();
-  }
-
-  /// 1.create a chatroom, send user to the chatroom, other userdetails
-  sendMessage(String userName) {
-    List<String> users = ["userName", userName];
-
-    String chatRoomId = getChatRoomId("userName", userName);
-
-    Map<String, dynamic> chatRoom = {
-      "users": users,
-      "chatRoomId": chatRoomId,
-    };
-
-    databaseMethods.addChatRoom(chatRoom, chatRoomId);
-
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ChatDetailProvider()));
-  }
-
-  Widget userTile(String userName, String userEmail) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                userName,
-                style: TextStyle(color: Colors.red, fontSize: 16),
-              ),
-              Text(
-                userEmail,
-                style: TextStyle(color: Colors.red, fontSize: 16),
-              )
-            ],
-          ),
-          Spacer(),
-          GestureDetector(
-            onTap: () {
-              sendMessage(userName);
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(24)),
-              child: Text(
-                "Message",
-                style: TextStyle(color: Colors.blue, fontSize: 16),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  getChatRoomId(String a, String b) {
-    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
-      return "$b\_$a";
-    } else {
-      return "$a\_$b";
-    }
-  }
 
   @override
   void initState() {
@@ -118,62 +33,71 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+    final chatBloc = BlocProvider.of<ChatBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Chat"),
+        brightness: Brightness.light,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: true,
+        centerTitle: false,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+          ),
+        ],
+        title: Text(
+          "Select contact",
+          style: TextStyle(
+            color: StyledColors.DARK_GREEN,
+            fontWeight: FontWeight.w500,
+            fontSize: 24,
+          ),
+        ),
       ),
-      body: isLoading
-          ? Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            )
-          : Container(
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                    color: Color(0x54FFFFFF),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: searchEditingController,
-                            decoration: InputDecoration(
-                                hintText: "search username ...",
-                                hintStyle: TextStyle(
-                                  color: Colors.blueAccent,
-                                  fontSize: 16,
-                                ),
-                                border: InputBorder.none),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            initiateSearch();
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: [
-                                      const Color(0x36FFFFFF),
-                                      const Color(0x0FFFFFFF)
-                                    ],
-                                    begin: FractionalOffset.topLeft,
-                                    end: FractionalOffset.bottomRight),
-                                borderRadius: BorderRadius.circular(40)),
-                            padding: EdgeInsets.all(12),
-                          ),
-                        )
-                      ],
-                    ),
+      body: Container(
+        child: BlocBuilder<RootBloc, RootState>(
+            buildWhen: (pre, current) =>
+                pre.allLecturers != current.allLecturers,
+            builder: (context, state) {
+              if (state.allLecturers == null) {
+                return loadingWidget;
+              }
+
+              List<Widget> children = [];
+
+              for (int i = 0; i < state.allLecturers.length; i++) {
+                final lecturer = state.allLecturers[i];
+
+                final tile = ListTile(
+                  onTap: () {
+                    chatBloc.add(CreateChatRoom(lecturer));
+                    Navigator.pop(context);
+                  },
+                  title: Text(lecturer.name ?? ""),
+                  subtitle: Text("Lecturer"),
+                  leading: ProfileImage(
+                    firstName: lecturer.name,
+                    lastName: " ",
+                    radius: 25,
+                    backgroundColor: StyledColors.PRIMARY_COLOR,
                   ),
-                  userList()
+                );
+                children.add(tile);
+              }
+
+              return Column(
+                children: [
+                  Expanded(
+                      child: ListView(
+                    children: children,
+                  )),
                 ],
-              ),
-            ),
+              );
+            }),
+      ),
     );
   }
 }

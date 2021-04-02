@@ -19,6 +19,5 @@ class ChangeChatRooms extends ChatEvent {
 
 class CreateChatRoom extends ChatEvent {
   final User user;
-
   CreateChatRoom(this.user);
 }

@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/db/model/chat.dart';
 import 'package:smart_app/db/model/chat_room.dart';
 import 'package:smart_app/db/repository/chat_repository.dart';
+import 'package:smart_app/db/repository/chat_room_repository.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
 
 import 'chat_detail_event.dart';
@@ -20,6 +21,7 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
   final RootBloc rootBloc;
   final ChatRoom chtRoom;
   final repo = ChatRepository();
+  final chatRoomRepo = ChatRoomRepository();
 
   StreamSubscription chatSubscription;
 
@@ -67,8 +69,13 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
         );
 
         try {
-          repo.add(item: msg, parent: chtRoom.ref);
+          await repo.add(item: msg, parent: chtRoom.ref);
 
+          await chatRoomRepo.update(
+              item: chtRoom,
+              mapper: (_) => {
+                    ChatRoom.LAST_MESSAGE: msgText,
+                  });
         } catch (e) {
           print(e.toString());
         }

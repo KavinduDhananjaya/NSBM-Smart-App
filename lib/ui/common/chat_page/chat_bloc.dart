@@ -5,6 +5,7 @@ import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/chat_room.dart';
 import 'package:smart_app/db/repository/chat_room_repository.dart';
 import 'package:smart_app/ui/common/root_page/root_bloc.dart';
 
@@ -29,7 +30,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     chatRoomSubscription = repo
         .query(
             specification: ComplexSpecification([
-      ComplexWhere('users', arrayContainsAny: [rootBloc.state?.currentUser?.ref])
+      ComplexWhere('users',
+          arrayContainsAny: [rootBloc.state?.currentUser?.ref])
     ]))
         .listen((event) {
       add(ChangeChatRooms(event));
@@ -50,6 +52,20 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         final all = (event as ChangeChatRooms).all;
         yield state.clone(chatRooms: all);
         break;
+
+      case CreateChatRoom:
+        final user = (event as CreateChatRoom).user;
+
+        try {
+          final chatRoom = ChatRoom(
+            users: [rootBloc.state.currentUser.ref, user.ref],
+          );
+
+          await repo.add(item: chatRoom);
+        } catch (e) {
+          print(e.toString());
+        }
+        break;
     }
   }
 
@@ -65,7 +81,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> close() async {
     chatRoomSubscription?.cancel();
     await super.close();
-
   }
 
   void _addErr(e) {

@@ -5,43 +5,14 @@ import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/chat_page/new/search.dart';
 import 'package:smart_app/ui/common/chat_page/widgets/chat_room_tile.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
-import 'file:///E:/My/External%20Projects/NSBM-SmartApp/NSBM-Smart-App/lib/ui/common/chat_page/widgets/chat_card.dart';
 import 'chat_bloc.dart';
 import 'chat_state.dart';
-
-class ChatUsers {
-  String name;
-  String messageText;
-  String imageURL;
-  String time;
-
-  ChatUsers(
-      {@required this.name,
-      @required this.messageText,
-      @required this.imageURL,
-      @required this.time});
-}
 
 class ChatView extends StatelessWidget {
   static final log = Log("ChatView");
   static final loadingWidget = Center(
     child: CircularProgressIndicator(),
   );
-
-  List<ChatUsers> chatUsers = [
-    ChatUsers(
-        name: "Jane Russel",
-        messageText: "Awesome Setup",
-        imageURL:
-            "https://firebasestorage.googleapis.com/v0/b/nsbm-smart-app.appspot.com/o/events%2Funnamed.jpg?alt=media&token=5dd54155-769a-45ed-b51d-73dfc369dd9e",
-        time: "Now"),
-    ChatUsers(
-        name: "Jane Russel",
-        messageText: "Awesome Setup",
-        imageURL:
-            "https://firebasestorage.googleapis.com/v0/b/nsbm-smart-app.appspot.com/o/events%2Funnamed.jpg?alt=media&token=5dd54155-769a-45ed-b51d-73dfc369dd9e",
-        time: "Now"),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -100,15 +71,21 @@ class ChatView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ListView.builder(
-                      itemCount: state.chatRooms.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return ChatRoomsTile(
-                          userName: "UserName",
-                          chatRoom: state.chatRooms[index],
-                        );
-                      })
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: state.chatRooms.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return ChatRoomsTile(
+                            user: state.chatRooms[index].users.last,
+                            chatRoom: state.chatRooms[index],
+                            lastMsg: state.chatRooms[index].lastMsg ?? "",
+                          );
+                        }),
+                  )
                 ],
               ),
             );
@@ -118,7 +95,14 @@ class ChatView extends StatelessWidget {
         backgroundColor: StyledColors.PRIMARY_COLOR,
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Search()));
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider.value(
+                value: chatBloc,
+                child: Search(),
+              ),
+            ),
+          );
         },
       ),
     );
