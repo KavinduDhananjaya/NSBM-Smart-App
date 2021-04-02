@@ -55,4 +55,9 @@ class ChatRoomRepository extends FirebaseRepository<ChatRoom> {
   }) {
     return super.update(item: item, type: DBUtil.CHAT_ROOM, mapper: mapper);
   }
+
+  @override
+  Future<Function> remove({@required ChatRoom item}) {
+    return super.remove(item: item);
+  }
 }

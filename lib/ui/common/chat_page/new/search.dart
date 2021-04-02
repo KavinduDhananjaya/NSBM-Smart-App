@@ -62,8 +62,10 @@ class _SearchState extends State<Search> {
             buildWhen: (pre, current) =>
                 pre.allLecturers != current.allLecturers,
             builder: (context, state) {
-              if (state.allLecturers == null) {
-                return loadingWidget;
+              if (state.allLecturers.isEmpty) {
+                return Center(
+                  child: Text("No Lecturers"),
+                );
               }
 
               List<Widget> children = [];
@@ -73,6 +75,29 @@ class _SearchState extends State<Search> {
 
                 final tile = ListTile(
                   onTap: () {
+                    if (chatBloc.state?.chatRooms != null &&
+                        chatBloc.state.chatRooms.isNotEmpty) {
+                      final chatRoom = chatBloc.state.chatRooms
+                          .where(
+                              (element) => element.users.contains(lecturer.ref))
+                          .toList(growable: false);
+
+                      if (chatRoom.isNotEmpty) {
+                        Navigator.pop(context);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatDetailProvider(
+                              chatRoom: chatRoom[0],
+                              user: lecturer.ref,
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                    }
+
                     chatBloc.add(CreateChatRoom(lecturer));
                     Navigator.pop(context);
                   },
@@ -81,6 +106,10 @@ class _SearchState extends State<Search> {
                   leading: ProfileImage(
                     firstName: lecturer.name,
                     lastName: " ",
+                    image: lecturer.profileImage == null ||
+                            lecturer.profileImage.isEmpty
+                        ? null
+                        : NetworkImage(lecturer.profileImage),
                     radius: 25,
                     backgroundColor: StyledColors.PRIMARY_COLOR,
                   ),

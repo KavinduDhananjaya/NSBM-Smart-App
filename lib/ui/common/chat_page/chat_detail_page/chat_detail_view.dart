@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/db/model/user.dart';
+import 'package:smart_app/db/repository/user_repository.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/chat_page/chat_detail_page/chat_detail_page.dart';
 import 'package:smart_app/ui/common/chat_page/widgets/message_tile.dart';
@@ -10,6 +14,13 @@ import 'chat_detail_bloc.dart';
 import 'chat_detail_state.dart';
 
 class ChatDetailView extends StatefulWidget {
+  final DocumentReference user;
+
+  const ChatDetailView({
+    Key key,
+    this.user,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => ChatDetailViewState();
 }
@@ -21,6 +32,13 @@ class ChatDetailViewState extends State<ChatDetailView> {
   );
 
   TextEditingController messageEditingController = new TextEditingController();
+
+  final addon = RepositoryAddon(repository: new UserRepository());
+
+  Future<User> getUser(DocumentReference ref) async {
+    final user = await addon.fetch(ref: ref);
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,10 +81,22 @@ class ChatDetailViewState extends State<ChatDetailView> {
                 SizedBox(
                   width: 2,
                 ),
-                ProfileImage(
-                  radius: 20,
-                  firstName: "KA",
-                  lastName: "Dhana",
+                FutureBuilder(
+                  future: getUser(widget.user),
+                  builder: (context, snapshot) {
+                    return ProfileImage(
+                      firstName: snapshot.hasData ? snapshot.data.name : "-",
+                      lastName: " ",
+                      radius: 25,
+                      image: snapshot.hasData
+                          ? snapshot.data.profileImage == null ||
+                                  snapshot.data.profileImage.isEmpty
+                              ? null
+                              : NetworkImage(snapshot.data.profileImage)
+                          : null,
+                      backgroundColor: StyledColors.PRIMARY_COLOR,
+                    );
+                  }, // The widget using the data
                 ),
                 SizedBox(
                   width: 12,
@@ -76,18 +106,21 @@ class ChatDetailViewState extends State<ChatDetailView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        "Kriss Benwat",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                      FutureBuilder(
+                        future: getUser(widget.user),
+                        builder: (context, snapshot) {
+                          return Text(
+                            snapshot.hasData ? snapshot.data.name : "-",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          );
+                        }, // The widget using the data
                       ),
                       SizedBox(
                         height: 6,
-                      ),
-                      Text(
-                        "Online",
-                        style: TextStyle(
-                            color: Colors.grey.shade600, fontSize: 13),
                       ),
                     ],
                   ),

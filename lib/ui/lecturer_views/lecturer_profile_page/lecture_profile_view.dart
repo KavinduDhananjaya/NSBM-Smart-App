@@ -84,7 +84,10 @@ class LecturerProfileView extends StatelessWidget {
                     radius: 32,
                     firstName: "${snapshot.currentUser.name}",
                     lastName: " ",
-                    image: null,
+                    image:
+                    snapshot.currentUser.profileImage.isEmpty || snapshot.currentUser.profileImage == null
+                        ? null
+                        : NetworkImage(snapshot.currentUser.profileImage),
                     backgroundColor: StyledColors.DARK_GREEN.withOpacity(0.4),
                   ),
                   SizedBox(

@@ -88,7 +88,10 @@ class ProfileView extends StatelessWidget {
                     radius: 32,
                     firstName: user.name,
                     lastName: " ",
-                    image: null,
+                    image:
+                        user.profileImage.isEmpty || user.profileImage == null
+                            ? null
+                            : NetworkImage(user.profileImage),
                     backgroundColor: StyledColors.DARK_GREEN.withOpacity(0.4),
                   ),
                   SizedBox(

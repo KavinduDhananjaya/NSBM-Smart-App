@@ -49,6 +49,7 @@ class ChatRoomsTile extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ChatDetailProvider(
+              user: user,
               chatRoom: chatRoom,
             ),
           ),
@@ -73,6 +74,12 @@ class ChatRoomsTile extends StatelessWidget {
                         firstName: snapshot.hasData ? snapshot.data.name : "-",
                         lastName: " ",
                         radius: 25,
+                        image: snapshot.hasData
+                            ? snapshot.data.profileImage == null ||
+                            snapshot.data.profileImage.isEmpty
+                            ? null
+                            : NetworkImage(snapshot.data.profileImage)
+                            : null,
                         backgroundColor: StyledColors.PRIMARY_COLOR,
                       );
                     }, // The widget using the data
@@ -92,9 +99,10 @@ class ChatRoomsTile extends StatelessWidget {
                               return Text(
                                 snapshot.hasData ? snapshot.data.name : "-",
                                 style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
                               );
                             }, // The widget using the data
                           ),
