@@ -1,16 +1,79 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:smart_app/db/model/user.dart';
+import 'package:smart_app/db/repository/user_repository.dart';
+import 'package:smart_app/theme/styled_colors.dart';
+import 'package:smart_app/ui/common/chat_page/chat_detail_page/chat_detail_page.dart';
+import 'package:smart_app/ui/common/chat_page/widgets/message_tile.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
 
 import 'chat_detail_bloc.dart';
 import 'chat_detail_state.dart';
 
-class ChatDetailView extends StatelessWidget {
+class ChatDetailView extends StatefulWidget {
+  final DocumentReference user;
+
+  const ChatDetailView({
+    Key key,
+    this.user,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => ChatDetailViewState();
+}
+
+class ChatDetailViewState extends State<ChatDetailView> {
   static final log = Log("ChatDetailView");
   static final loadingWidget = Center(
     child: CircularProgressIndicator(),
   );
+
+  TextEditingController messageEditingController = new TextEditingController();
+
+  final addon = RepositoryAddon(repository: new UserRepository());
+
+  Future<User> getUser(DocumentReference ref) async {
+    final user = await addon.fetch(ref: ref);
+    return user;
+  }
+
+
+  AutoScrollController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AutoScrollController(
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        axis: Axis.horizontal);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  Future _scrollToIndex(int level) async {
+    await controller.scrollToIndex(level,
+        preferPosition: AutoScrollPosition.middle);
+  }
+
+  Widget _wrapScrollTag({
+    int index,
+    MessageTile btn,
+  }) =>
+      AutoScrollTag(
+        key: ValueKey(index),
+        controller: controller,
+        index: index,
+        child: btn,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +82,17 @@ class ChatDetailView extends StatelessWidget {
     // ignore: close_sinks
     final rootBloc = BlocProvider.of<RootBloc>(context);
     log.d("Loading ChatDetail View");
+
+    addMessage() {
+      if (messageEditingController.text.isNotEmpty) {
+        chat_detailBloc.add(CreateMessage(messageEditingController.text));
+
+        setState(() {
+          messageEditingController.text = "";
+        });
+      }
+    }
+
 
     CustomSnackBar customSnackBar;
     final scaffold = Scaffold(
@@ -32,90 +106,159 @@ class ChatDetailView extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 IconButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.arrow_back,color: Colors.black,),
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
+                  ),
                 ),
-                SizedBox(width: 2,),
-                CircleAvatar(
-                  backgroundImage: NetworkImage("<https://randomuser.me/api/portraits/men/5.jpg>"),
-                  maxRadius: 20,
+                SizedBox(
+                  width: 2,
                 ),
-                SizedBox(width: 12,),
+                FutureBuilder(
+                  future: getUser(widget.user),
+                  builder: (context, snapshot) {
+                    return ProfileImage(
+                      firstName: snapshot.hasData ? snapshot.data.name : "-",
+                      lastName: " ",
+                      radius: 25,
+                      image: snapshot.hasData
+                          ? snapshot.data.profileImage == null ||
+                                  snapshot.data.profileImage.isEmpty
+                              ? null
+                              : NetworkImage(snapshot.data.profileImage)
+                          : null,
+                      backgroundColor: StyledColors.PRIMARY_COLOR,
+                    );
+                  }, // The widget using the data
+                ),
+                SizedBox(
+                  width: 12,
+                ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("Kriss Benwat",style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),),
-                      SizedBox(height: 6,),
-                      Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
+                      FutureBuilder(
+                        future: getUser(widget.user),
+                        builder: (context, snapshot) {
+                          return Text(
+                            snapshot.hasData ? snapshot.data.name : "-",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          );
+                        }, // The widget using the data
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
                     ],
                   ),
                 ),
-                Icon(Icons.settings,color: Colors.black54,),
+                Icon(
+                  Icons.settings,
+                  color: Colors.black54,
+                ),
               ],
             ),
           ),
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
+      body: Container(
+        width: double.infinity,
+        child: Column(
+          children: <Widget>[
+            BlocBuilder<ChatDetailBloc, ChatDetailState>(
+              buildWhen: (pre, current) => pre.allChat != current.allChat,
+              builder: (context, state) {
+                if (state.allChat == null) {
+                  return loadingWidget;
+                }
+
+                return BlocBuilder<RootBloc, RootState>(
+                  buildWhen: (pre, current) =>
+                      pre.currentUser != current.currentUser,
+                  builder: (context, snapshot) {
+                    final user = snapshot.currentUser;
+
+                    List<Widget> list = [];
+
+                    _scrollToIndex(state.allChat.length-1 ?? 0);
+
+                    for(int i=0;i<state.allChat.length;i++){
+
+                      final tile=MessageTile(
+                        message: state.allChat[i].msg,
+                        sendByMe: user?.ref?.path ==
+                            state.allChat[i]?.sendBy?.path,
+                      );
+
+                      list.add(_wrapScrollTag(index: i + 1, btn: tile));
+
+                    }
+
+
+                    return Expanded(
+                      child: ListView(
+                        scrollDirection: Axis.vertical,
+                        controller: controller,
+                        children: list,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            Container(
               padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-              height: 60,
-              width: double.infinity,
+              height: 100,
               color: Colors.white,
+              width: double.infinity,
               child: Row(
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlue,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
+                      controller: messageEditingController,
                       decoration: InputDecoration(
-                          hintText: "Write message...",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          border: InputBorder.none),
+                        hintText: "Message ...",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      maxLines: 2,
+                      onFieldSubmitted: (value) {
+                        addMessage();
+                      },
                     ),
                   ),
                   SizedBox(
-                    width: 15,
+                    width: 8,
                   ),
-                  FloatingActionButton(
-                    onPressed: () {},
-                    child: Icon(
+                  IconButton(
+                    onPressed: () {
+                      addMessage();
+                    },
+                    icon: Icon(
                       Icons.send,
-                      color: Colors.white,
-                      size: 18,
+                      color: StyledColors.PRIMARY_COLOR,
+                      size: 32,
                     ),
-                    backgroundColor: Colors.blue,
-                    elevation: 0,
+                  ),
+                  SizedBox(
+                    width: 8,
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
 

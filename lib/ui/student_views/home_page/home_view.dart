@@ -21,7 +21,6 @@ class HomeView extends StatelessWidget {
 
   final textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
 
-
   void _launchURL(String url) async =>
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
@@ -44,6 +43,7 @@ class HomeView extends StatelessWidget {
               return HomePageAppBar(
                 firstName: "${state.currentUser.name}",
                 lastName: " ",
+                profileImage: state.currentUser.profileImage,
               );
             }),
       ),
@@ -117,7 +117,9 @@ class HomeView extends StatelessWidget {
                                     "Hall Booking",
                                     style: textStyle,
                                   ),
-                                  SizedBox(height: 10,),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Icon(
                                     Icons.view_compact_outlined,
                                     color: Colors.grey,
@@ -229,7 +231,8 @@ class HomeView extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          _launchURL("https://www.google.lk/maps/place/NSBM+Green+University+Town/@6.8212859,80.0398974,17.75z/data=!4m5!3m4!1s0x3ae2523b05555555:0x546c34cd99f6f488!8m2!3d6.8213291!4d80.0415729");
+                          _launchURL(
+                              "https://www.google.lk/maps/place/NSBM+Green+University+Town/@6.8212859,80.0398974,17.75z/data=!4m5!3m4!1s0x3ae2523b05555555:0x546c34cd99f6f488!8m2!3d6.8213291!4d80.0415729");
                           // Navigator.push(
                           //   context,
                           //   MaterialPageRoute(
@@ -244,7 +247,7 @@ class HomeView extends StatelessWidget {
                           ),
                           child: Container(
                             width: double.infinity,
-                            height: 130 ,
+                            height: 130,
                             padding: EdgeInsets.symmetric(
                                 vertical: 16, horizontal: 16),
                             child: Column(

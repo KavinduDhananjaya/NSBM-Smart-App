@@ -8,5 +8,7 @@ abstract class DBUtil {
   static const String NOTIFICATION='Notifications';
   static const String HALL='Halls';
   static const String TIMETABLE='Timetables';
+  static const String CHAT_ROOM='ChatRooms';
+  static const String CHAT='Chats';
 
 }

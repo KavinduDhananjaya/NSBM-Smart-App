@@ -6,11 +6,13 @@ import 'package:smart_app/theme/styled_colors.dart';
 class HomePageAppBar extends StatelessWidget {
   final String firstName;
   final String lastName;
+  final String profileImage;
 
   const HomePageAppBar({
     Key key,
     this.firstName,
     this.lastName,
+    this.profileImage,
   }) : super(key: key);
 
   @override
@@ -34,10 +36,15 @@ class HomePageAppBar extends StatelessWidget {
                 width: 12,
               ),
               ProfileImage(
-                  firstName: "$firstName",
-                  lastName: "$lastName",
-                  backgroundColor: StyledColors.DARK_GREEN,
-                  minRadius: 25),
+                firstName: "$firstName",
+                lastName: "$lastName",
+                image:
+                profileImage.isEmpty || profileImage == null
+                    ? null
+                    : NetworkImage(profileImage),
+                backgroundColor: StyledColors.DARK_GREEN,
+                minRadius: 25,
+              ),
               SizedBox(
                 width: 16,
               ),

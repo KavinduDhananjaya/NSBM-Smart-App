@@ -30,10 +30,17 @@ class LecturerHomeView extends StatelessWidget {
     final scaffold = Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 80),
-        child: HomePageAppBar(
-          firstName: "Demo",
-          lastName: "Silva",
-        ),
+        child: BlocBuilder<RootBloc, RootState>(
+            buildWhen: (pre, current) => pre.currentUser != current.currentUser,
+            builder: (context, snapshot) {
+              final user = snapshot.currentUser;
+
+              return HomePageAppBar(
+                firstName: user.name,
+                lastName: " ",
+                profileImage: user.profileImage,
+              );
+            }),
       ),
       body: Container(
         width: double.infinity,
@@ -47,8 +54,9 @@ class LecturerHomeView extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => TimeTableProvider(),
-                          fullscreenDialog: true));
+                        builder: (context) => TimeTableProvider(),
+                        fullscreenDialog: true,
+                      ));
                 },
                 child: Card(
                   elevation: 5,
