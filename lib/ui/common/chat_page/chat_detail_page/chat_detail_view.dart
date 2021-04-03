@@ -3,6 +3,7 @@ import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:smart_app/db/model/user.dart';
 import 'package:smart_app/db/repository/user_repository.dart';
 import 'package:smart_app/theme/styled_colors.dart';
@@ -40,6 +41,40 @@ class ChatDetailViewState extends State<ChatDetailView> {
     return user;
   }
 
+
+  AutoScrollController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AutoScrollController(
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        axis: Axis.horizontal);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  Future _scrollToIndex(int level) async {
+    await controller.scrollToIndex(level,
+        preferPosition: AutoScrollPosition.end);
+  }
+
+  Widget _wrapScrollTag({
+    int index,
+    MessageTile btn,
+  }) =>
+      AutoScrollTag(
+        key: ValueKey(index),
+        controller: controller,
+        index: index,
+        child: btn,
+      );
+
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
@@ -57,6 +92,7 @@ class ChatDetailViewState extends State<ChatDetailView> {
         });
       }
     }
+
 
     CustomSnackBar customSnackBar;
     final scaffold = Scaffold(
@@ -139,30 +175,46 @@ class ChatDetailViewState extends State<ChatDetailView> {
         child: Column(
           children: <Widget>[
             BlocBuilder<ChatDetailBloc, ChatDetailState>(
-                buildWhen: (pre, current) => pre.allChat != current.allChat,
-                builder: (context, state) {
-                  if (state.allChat == null) {
-                    return loadingWidget;
-                  }
-                  return BlocBuilder<RootBloc, RootState>(
-                      buildWhen: (pre, current) =>
-                          pre.currentUser != current.currentUser,
-                      builder: (context, snapshot) {
-                        final user = snapshot.currentUser;
+              buildWhen: (pre, current) => pre.allChat != current.allChat,
+              builder: (context, state) {
+                if (state.allChat == null) {
+                  return loadingWidget;
+                }
 
-                        return Expanded(
-                          child: ListView.builder(
-                              itemCount: state.allChat.length,
-                              itemBuilder: (context, index) {
-                                return MessageTile(
-                                  message: state.allChat[index].msg,
-                                  sendByMe: user?.ref?.path ==
-                                      state.allChat[index]?.sendBy?.path,
-                                );
-                              }),
-                        );
-                      });
-                }),
+                return BlocBuilder<RootBloc, RootState>(
+                  buildWhen: (pre, current) =>
+                      pre.currentUser != current.currentUser,
+                  builder: (context, snapshot) {
+                    final user = snapshot.currentUser;
+
+                    List<Widget> list = [];
+
+                    _scrollToIndex(state.allChat.length-1 ?? 0);
+
+                    for(int i=0;i<state.allChat.length;i++){
+
+                      final tile=MessageTile(
+                        message: state.allChat[i].msg,
+                        sendByMe: user?.ref?.path ==
+                            state.allChat[i]?.sendBy?.path,
+                      );
+
+                      list.add(_wrapScrollTag(index: i + 1, btn: tile));
+
+                    }
+
+
+                    return Expanded(
+                      child: ListView(
+                        scrollDirection: Axis.vertical,
+                        controller: controller,
+                        children: list,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
             Container(
               padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
               height: 100,
