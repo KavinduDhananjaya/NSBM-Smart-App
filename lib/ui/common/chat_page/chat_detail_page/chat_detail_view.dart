@@ -61,7 +61,7 @@ class ChatDetailViewState extends State<ChatDetailView> {
 
   Future _scrollToIndex(int level) async {
     await controller.scrollToIndex(level,
-        preferPosition: AutoScrollPosition.end);
+        preferPosition: AutoScrollPosition.middle);
   }
 
   Widget _wrapScrollTag({

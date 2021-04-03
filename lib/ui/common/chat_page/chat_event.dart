@@ -21,3 +21,9 @@ class CreateChatRoom extends ChatEvent {
   final User user;
   CreateChatRoom(this.user);
 }
+
+class SearchEvent extends ChatEvent{
+  final String text;
+
+  SearchEvent(this.text);
+}

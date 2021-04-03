@@ -48,6 +48,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         yield state.clone(error: error);
         break;
 
+      case SearchEvent:
+        final value = (event as SearchEvent).text;
+        yield state.clone(schText: value);
+        break;
+
+
       case ChangeChatRooms:
         final all = (event as ChangeChatRooms).all;
         yield state.clone(chatRooms: all);

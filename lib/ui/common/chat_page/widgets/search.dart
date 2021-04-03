@@ -10,13 +10,11 @@ import 'package:smart_app/ui/common/root_page/root_page.dart';
 
 class Search extends StatefulWidget {
   @override
-  _SearchState createState() => _SearchState();
+  State<StatefulWidget> createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
   TextEditingController searchEditingController = new TextEditingController();
-
-
 
   static final loadingWidget = Center(
     child: CircularProgressIndicator(),
@@ -26,6 +24,8 @@ class _SearchState extends State<Search> {
   void initState() {
     super.initState();
   }
+
+  String se = '';
 
   @override
   Widget build(BuildContext context) {
@@ -39,120 +39,167 @@ class _SearchState extends State<Search> {
         automaticallyImplyLeading: true,
         centerTitle: false,
         title: Text(
-                "Select contact",
-                style: TextStyle(
-                  color: StyledColors.DARK_GREEN,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24,
-                ),
-              ),
+          "Select contact",
+          style: TextStyle(
+            color: StyledColors.DARK_GREEN,
+            fontWeight: FontWeight.w500,
+            fontSize: 24,
+          ),
+        ),
       ),
       body: Container(
         child: BlocBuilder<RootBloc, RootState>(
             buildWhen: (pre, current) =>
                 pre.allLecturers != current.allLecturers,
             builder: (context, state) {
-              if (state.allLecturers.isEmpty) {
-                return Center(
-                  child: Text("No Lecturers"),
-                );
-              }
+              return BlocBuilder<ChatBloc, ChatState>(
+                  buildWhen: (pre, current) => pre.schText != current.schText,
+                  builder: (context, snapshot) {
+                    if (state.allLecturers.isEmpty) {
+                      return Center(
+                        child: Text("No Lecturers"),
+                      );
+                    }
 
-              List<Widget> children = [];
+                    List<Widget> children = [];
 
-              for (int i = 0; i < state.allLecturers.length; i++) {
-                final lecturer = state.allLecturers[i];
+                    for (int i = 0; i < state.allLecturers.length; i++) {
+                      final lecturer = state.allLecturers[i];
 
-                final tile = ListTile(
-                  onTap: () {
-                    if (chatBloc.state?.chatRooms != null &&
-                        chatBloc.state.chatRooms.isNotEmpty) {
-                      final chatRoom = chatBloc.state.chatRooms
-                          .where(
-                              (element) => element.users.contains(lecturer.ref))
-                          .toList(growable: false);
+                      if (snapshot.schText.isEmpty) {
+                        final tile = ListTile(
+                          onTap: () {
+                            if (chatBloc.state?.chatRooms != null &&
+                                chatBloc.state.chatRooms.isNotEmpty) {
+                              final chatRoom = chatBloc.state.chatRooms
+                                  .where((element) =>
+                                      element.users.contains(lecturer.ref))
+                                  .toList(growable: false);
 
-                      if (chatRoom.isNotEmpty) {
-                        Navigator.pop(context);
+                              if (chatRoom.isNotEmpty) {
+                                Navigator.pop(context);
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChatDetailProvider(
-                              chatRoom: chatRoom[0],
-                              user: lecturer.ref,
-                            ),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatDetailProvider(
+                                      chatRoom: chatRoom[0],
+                                      user: lecturer.ref,
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                            }
+
+                            chatBloc.add(CreateChatRoom(lecturer));
+                            Navigator.pop(context);
+                          },
+                          title: Text(lecturer.name ?? ""),
+                          subtitle: Text("Lecturer"),
+                          leading: ProfileImage(
+                            firstName: lecturer.name,
+                            lastName: " ",
+                            image: lecturer.profileImage == null ||
+                                    lecturer.profileImage.isEmpty
+                                ? null
+                                : NetworkImage(lecturer.profileImage),
+                            radius: 25,
+                            backgroundColor: StyledColors.PRIMARY_COLOR,
                           ),
                         );
-                        return;
+                        children.add(tile);
+                      } else {
+                        if (lecturer.name
+                            .toLowerCase()
+                            .contains(snapshot.schText.toLowerCase())) {
+                          final tile = ListTile(
+                            onTap: () {
+                              if (chatBloc.state?.chatRooms != null &&
+                                  chatBloc.state.chatRooms.isNotEmpty) {
+                                final chatRoom = chatBloc.state.chatRooms
+                                    .where((element) =>
+                                        element.users.contains(lecturer.ref))
+                                    .toList(growable: false);
+
+                                if (chatRoom.isNotEmpty) {
+                                  Navigator.pop(context);
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatDetailProvider(
+                                        chatRoom: chatRoom[0],
+                                        user: lecturer.ref,
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
+                              }
+
+                              chatBloc.add(CreateChatRoom(lecturer));
+                              Navigator.pop(context);
+                            },
+                            title: Text(lecturer.name ?? ""),
+                            subtitle: Text("Lecturer"),
+                            leading: ProfileImage(
+                              firstName: lecturer.name,
+                              lastName: " ",
+                              image: lecturer.profileImage == null ||
+                                      lecturer.profileImage.isEmpty
+                                  ? null
+                                  : NetworkImage(lecturer.profileImage),
+                              radius: 25,
+                              backgroundColor: StyledColors.PRIMARY_COLOR,
+                            ),
+                          );
+                          children.add(tile);
+                        }
                       }
                     }
 
-                    chatBloc.add(CreateChatRoom(lecturer));
-                    Navigator.pop(context);
-                  },
-                  title: Text(lecturer.name ?? ""),
-                  subtitle: Text("Lecturer"),
-                  leading: ProfileImage(
-                    firstName: lecturer.name,
-                    lastName: " ",
-                    image: lecturer.profileImage == null ||
-                            lecturer.profileImage.isEmpty
-                        ? null
-                        : NetworkImage(lecturer.profileImage),
-                    radius: 25,
-                    backgroundColor: StyledColors.PRIMARY_COLOR,
-                  ),
-                );
-                children.add(tile);
-              }
-
-              return Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: StyledColors.PRIMARY_COLOR.withOpacity(0.1),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
-                      ),
-                    ),
-                    child: TextField(
-                      onChanged: (value) {
-                      },
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: StyledColors.DARK_BLUE,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(10.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide(
-                            color: StyledColors.DARK_BLUE,
+                    return Column(
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 16, left: 16, right: 16,bottom: 16),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: "Search...",
+                              hintStyle: TextStyle(color: Colors.grey.shade600),
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Colors.grey.shade600,
+                                size: 20,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey.shade100,
+                              contentPadding: EdgeInsets.all(8),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade100),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide:
+                                BorderSide(color: Colors.grey.shade100),
+                              ),
+                            ),
+                            controller: searchEditingController,
+                            onChanged: (value) {
+                              chatBloc.add(SearchEvent(value));
+                            },
                           ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.blueGrey[300],
-                          ),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        hintText: "faf Name",
-                        hintStyle: TextStyle(
-                          fontSize: 15.0,
-                          color: StyledColors.DARK_BLUE,
-                        ),
-                      ),
-                      maxLines: 1,
-                    ),
-                  ),
-                  Expanded(
-                      child: ListView(
-                    children: children,
-                  )),
-                ],
-              );
+                        Expanded(
+                            child: ListView(
+                          children: children,
+                        )),
+                      ],
+                    );
+                  });
             }),
       ),
     );

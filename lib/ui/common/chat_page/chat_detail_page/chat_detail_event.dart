@@ -21,3 +21,4 @@ class CreateMessage extends ChatDetailEvent {
 
   CreateMessage(this.msg);
 }
+
