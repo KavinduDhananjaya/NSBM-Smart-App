@@ -24,9 +24,9 @@ class MapViewState extends State<MapView> {
 
   Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _sriLanka = CameraPosition(
-    target: LatLng(7.8774222, 80.7003428),
-    zoom: 7.4746,
+  static final CameraPosition _nsbm = CameraPosition(
+    target: LatLng(6.8211392, 80.0400079),
+    zoom: 17.4746,
   );
 
 
@@ -58,9 +58,9 @@ class MapViewState extends State<MapView> {
         ),
       ),
       body: GoogleMap(
-        mapType: MapType.hybrid,
+        mapType: MapType.normal,
         indoorViewEnabled: true,
-        initialCameraPosition: _sriLanka,
+        initialCameraPosition: _nsbm,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },

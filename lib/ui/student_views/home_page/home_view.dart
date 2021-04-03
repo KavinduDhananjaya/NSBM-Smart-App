@@ -231,14 +231,14 @@ class HomeView extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          _launchURL(
-                              "https://www.google.lk/maps/place/NSBM+Green+University+Town/@6.8212859,80.0398974,17.75z/data=!4m5!3m4!1s0x3ae2523b05555555:0x546c34cd99f6f488!8m2!3d6.8213291!4d80.0415729");
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => MapProvider(),
-                          //       fullscreenDialog: true),
-                          // );
+                          // _launchURL(
+                          //     "https://www.google.lk/maps/place/NSBM+Green+University+Town/@6.8212859,80.0398974,17.75z/data=!4m5!3m4!1s0x3ae2523b05555555:0x546c34cd99f6f488!8m2!3d6.8213291!4d80.0415729");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MapProvider(),
+                                fullscreenDialog: true),
+                          );
                         },
                         child: Card(
                           elevation: 5,
