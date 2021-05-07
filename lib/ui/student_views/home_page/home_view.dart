@@ -1,6 +1,7 @@
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/map_page/map_page.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
 import 'package:smart_app/ui/student_views/events_page/events_page.dart';
@@ -19,7 +20,7 @@ class HomeView extends StatelessWidget {
     child: CircularProgressIndicator(),
   );
 
-  final textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
+  final textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w600,color: StyledColors.DARK_GREEN);
 
   void _launchURL(String url) async =>
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
@@ -57,17 +58,24 @@ class HomeView extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TimeTableProvider(),
-                          fullscreenDialog: true));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TimeTableProvider(),
+                        fullscreenDialog: true),
+                  );
                 },
                 child: Card(
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  shadowColor: StyledColors.PRIMARY_COLOR,
                   child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: StyledColors.PRIMARY_COLOR,
+                        ),
+                        borderRadius: BorderRadius.circular(10)),
                     padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,7 +89,7 @@ class HomeView extends StatelessWidget {
                         ),
                         Icon(
                           Icons.table_chart,
-                          color: Colors.grey,
+                          color: StyledColors.DARK_GREEN,
                           size: 50,
                         ),
                         SizedBox(
@@ -106,7 +114,12 @@ class HomeView extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
+                            shadowColor: StyledColors.PRIMARY_COLOR,
                             child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: StyledColors.PRIMARY_COLOR),
+                                  borderRadius: BorderRadius.circular(10)),
                               width: double.infinity,
                               height: 130,
                               padding: EdgeInsets.symmetric(
@@ -122,7 +135,7 @@ class HomeView extends StatelessWidget {
                                   ),
                                   Icon(
                                     Icons.view_compact_outlined,
-                                    color: Colors.grey,
+                                    color: StyledColors.DARK_GREEN,
                                     size: 60,
                                   ),
                                 ],
@@ -153,7 +166,13 @@ class HomeView extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
+                            shadowColor: StyledColors.PRIMARY_COLOR,
                             child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: StyledColors.PRIMARY_COLOR,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10)),
                               height: 130,
                               width: double.infinity,
                               padding: EdgeInsets.symmetric(
@@ -169,7 +188,7 @@ class HomeView extends StatelessWidget {
                                   ),
                                   Icon(
                                     Icons.event,
-                                    color: Colors.grey,
+                                    color: StyledColors.DARK_GREEN,
                                     size: 60,
                                   ),
                                 ],
@@ -188,15 +207,21 @@ class HomeView extends StatelessWidget {
                     children: [
                       GestureDetector(
                         child: Card(
+                          shadowColor: StyledColors.PRIMARY_COLOR,
                           elevation: 5,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: StyledColors.PRIMARY_COLOR,
+                                ),
+                                borderRadius: BorderRadius.circular(10)),
                             width: double.infinity,
                             height: 130,
                             padding: EdgeInsets.symmetric(
-                                vertical: 16, horizontal: 16),
+                                vertical: 12, horizontal: 16),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -210,7 +235,7 @@ class HomeView extends StatelessWidget {
                                 ),
                                 Icon(
                                   Icons.event_available_outlined,
-                                  color: Colors.grey,
+                                  color: StyledColors.DARK_GREEN,
                                   size: 50,
                                 ),
                               ],
@@ -242,10 +267,16 @@ class HomeView extends StatelessWidget {
                         },
                         child: Card(
                           elevation: 5,
+                          shadowColor: StyledColors.PRIMARY_COLOR,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: StyledColors.PRIMARY_COLOR,
+                                ),
+                                borderRadius: BorderRadius.circular(10)),
                             width: double.infinity,
                             height: 130,
                             padding: EdgeInsets.symmetric(
@@ -261,7 +292,7 @@ class HomeView extends StatelessWidget {
                                 ),
                                 Icon(
                                   Icons.map,
-                                  color: Colors.grey,
+                                  color: StyledColors.DARK_GREEN,
                                   size: 50,
                                 ),
                               ],

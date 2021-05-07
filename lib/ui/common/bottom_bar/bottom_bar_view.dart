@@ -107,13 +107,13 @@ class _BottomBarViewState extends State<BottomBarView> {
             bottomNavigationBar: FFNavigationBar(
               theme: FFNavigationBarTheme(
                 barBackgroundColor: Colors.white,
-                selectedItemBorderColor: StyledColors.LIGHT_GREEN,
-                selectedItemBackgroundColor: StyledColors.PRIMARY_COLOR.withOpacity(0.8),
+                selectedItemBorderColor: StyledColors.PRIMARY_COLOR,
+                selectedItemBackgroundColor: StyledColors.DARK_GREEN,
                 selectedItemIconColor: Colors.white,
                 selectedItemLabelColor: StyledColors.DARK_GREEN,
                 showSelectedItemShadow: false,
-                unselectedItemIconColor:  StyledColors.PRIMARY_COLOR.withOpacity(0.8),
-                unselectedItemLabelColor:  StyledColors.PRIMARY_COLOR.withOpacity(0.8),
+                unselectedItemIconColor:  StyledColors.PRIMARY_COLOR,
+                unselectedItemLabelColor:  StyledColors.PRIMARY_COLOR,
               ),
               selectedIndex: selectedIndex,
               onSelectTab: (index) {
