@@ -303,6 +303,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
 
   @override
   Future<void> close() async {
+    await closeSubscriptions();
     await super.close();
   }
 

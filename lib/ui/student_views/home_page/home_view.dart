@@ -20,7 +20,10 @@ class HomeView extends StatelessWidget {
     child: CircularProgressIndicator(),
   );
 
-  final textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w600,color: StyledColors.DARK_GREEN);
+  final textStyle = TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      color: StyledColors.DARK_GREEN);
 
   void _launchURL(String url) async =>
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
@@ -72,6 +75,14 @@ class HomeView extends StatelessWidget {
                   shadowColor: StyledColors.PRIMARY_COLOR,
                   child: Container(
                     decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            StyledColors.LIGHT_GREEN.withOpacity(0.3),
+                            StyledColors.PRIMARY_COLOR.withOpacity(0.7),
+                          ],
+                        ),
                         border: Border.all(
                           color: StyledColors.PRIMARY_COLOR,
                         ),
@@ -114,11 +125,20 @@ class HomeView extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            shadowColor: StyledColors.PRIMARY_COLOR,
+                            shadowColor: StyledColors.DARK_GREEN,
                             child: Container(
                               decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    colors: [
+                                      StyledColors.LIGHT_GREEN.withOpacity(0.3),
+                                      StyledColors.PRIMARY_COLOR.withOpacity(0.7),
+                                    ],
+                                  ),
                                   border: Border.all(
-                                      color: StyledColors.PRIMARY_COLOR),
+                                    color: StyledColors.PRIMARY_COLOR,
+                                  ),
                                   borderRadius: BorderRadius.circular(10)),
                               width: double.infinity,
                               height: 130,
@@ -169,6 +189,14 @@ class HomeView extends StatelessWidget {
                             shadowColor: StyledColors.PRIMARY_COLOR,
                             child: Container(
                               decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    colors: [
+                                      StyledColors.LIGHT_GREEN.withOpacity(0.3),
+                                      StyledColors.PRIMARY_COLOR.withOpacity(0.7),
+                                    ],
+                                  ),
                                   border: Border.all(
                                     color: StyledColors.PRIMARY_COLOR,
                                   ),
@@ -214,6 +242,14 @@ class HomeView extends StatelessWidget {
                           ),
                           child: Container(
                             decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    StyledColors.LIGHT_GREEN.withOpacity(0.3),
+                                    StyledColors.PRIMARY_COLOR.withOpacity(0.7),
+                                  ],
+                                ),
                                 border: Border.all(
                                   color: StyledColors.PRIMARY_COLOR,
                                 ),
@@ -256,8 +292,6 @@ class HomeView extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // _launchURL(
-                          //     "https://www.google.lk/maps/place/NSBM+Green+University+Town/@6.8212859,80.0398974,17.75z/data=!4m5!3m4!1s0x3ae2523b05555555:0x546c34cd99f6f488!8m2!3d6.8213291!4d80.0415729");
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -273,6 +307,14 @@ class HomeView extends StatelessWidget {
                           ),
                           child: Container(
                             decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    StyledColors.LIGHT_GREEN.withOpacity(0.3),
+                                    StyledColors.PRIMARY_COLOR.withOpacity(0.7),
+                                  ],
+                                ),
                                 border: Border.all(
                                   color: StyledColors.PRIMARY_COLOR,
                                 ),
@@ -292,7 +334,7 @@ class HomeView extends StatelessWidget {
                                 ),
                                 Icon(
                                   Icons.map,
-                                  color: StyledColors.DARK_GREEN,
+                                  color: StyledColors.DARK_BLUE,
                                   size: 50,
                                 ),
                               ],

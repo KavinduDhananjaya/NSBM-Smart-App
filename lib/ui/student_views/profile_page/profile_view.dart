@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_app/theme/styled_colors.dart';
 import 'package:smart_app/ui/common/root_page/root_page.dart';
+import 'package:smart_app/ui/student_views/profile_page/student_history_page/student_history_page.dart';
 import 'package:smart_app/util/routes.dart';
 
 import 'profile_bloc.dart';
@@ -179,6 +180,25 @@ class ProfileView extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StudentHistoryProvider(),
+                          fullscreenDialog: true,
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Student History",
+                      style: TextStyle(
+                        color: StyledColors.DARK_GREEN,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
                       rootBloc.add(UserLoggedOutEvent());
                       Navigator.pushNamedAndRemoveUntil(
                           context, Routes.LOGIN_ROUTE, (route) => false);
@@ -187,10 +207,13 @@ class ProfileView extends StatelessWidget {
                       "LOGOUT",
                       style: TextStyle(
                         color: StyledColors.DARK_BLUE,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 24,
                   ),
                 ],
               );
