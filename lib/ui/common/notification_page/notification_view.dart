@@ -74,7 +74,28 @@ class NotificationView extends StatelessWidget {
             );
           }
 
-          return ListView(children: children);
+          return Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                child: Image.asset(
+                  "assets/images/main_top.png",
+                  color: Colors.lightGreen.withOpacity(0.4),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Image.asset(
+                  "assets/images/login_bottom.png",
+                  color: Colors.lightGreen.withOpacity(0.2),
+
+                ),
+              ),
+              ListView(children: children),
+            ],
+          );
         },
       ),
     );

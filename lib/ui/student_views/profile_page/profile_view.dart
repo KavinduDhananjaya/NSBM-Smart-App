@@ -75,145 +75,166 @@ class ProfileView extends StatelessWidget {
             builder: (context, state) {
               final user = state.currentUser;
 
-              return Column(
+              return Stack(
                 children: [
-                  SizedBox(
-                    height: 8,
-                  ),
-                  ProfileImage(
-                    style: TextStyle(
-                      color: StyledColors.DARK_GREEN,
-                      fontSize: 27,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    radius: 32,
-                    firstName: user.name,
-                    lastName: " ",
-                    image:
-                        user.profileImage.isEmpty || user.profileImage == null
-                            ? null
-                            : NetworkImage(user.profileImage),
-                    backgroundColor: StyledColors.DARK_GREEN.withOpacity(0.4),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    "${user.name}",
-                    style: TextStyle(
-                      color: StyledColors.DARK_GREEN.withOpacity(0.7),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Image.asset(
+                      "assets/images/main_top.png",
+                      color: Colors.lightGreen.withOpacity(0.4),
                     ),
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  ListTile(
-                    title: Text(
-                      "NSBM Email",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${user.nsbmEmail}',
-                      style: subtitleStyle,
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Image.asset(
+                      "assets/images/login_bottom.png",
+                      color: Colors.lightGreen.withOpacity(0.2),
+
                     ),
                   ),
-                  separator,
-                  ListTile(
-                    title: Text(
-                      "NSBM ID",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${user.nsbmId}',
-                      style: subtitleStyle,
-                    ),
-                  ),
-                  separator,
-                  ListTile(
-                    title: Text(
-                      "Registered University",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${user.registeredUniversity}',
-                      style: subtitleStyle,
-                    ),
-                  ),
-                  separator,
-                  ListTile(
-                    title: Text(
-                      "Degree Program",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${user.degree}',
-                      style: subtitleStyle,
-                    ),
-                  ),
-                  separator,
-                  ListTile(
-                    title: Text(
-                      "University Email",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${user.universityEmail}',
-                      style: subtitleStyle,
-                    ),
-                  ),
-                  separator,
-                  ListTile(
-                    title: Text(
-                      "University ID",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${user.universityId}',
-                      style: subtitleStyle,
-                    ),
-                  ),
-                  separator,
-                  SizedBox(
-                    height: 24,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StudentHistoryProvider(),
-                          fullscreenDialog: true,
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 8,
+                      ),
+                      ProfileImage(
+                        style: TextStyle(
+                          color: StyledColors.DARK_GREEN,
+                          fontSize: 27,
+                          fontWeight: FontWeight.w600,
                         ),
-                      );
-                    },
-                    child: Text(
-                      "Student History",
-                      style: TextStyle(
-                        color: StyledColors.DARK_GREEN,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
+                        radius: 32,
+                        firstName: user.name,
+                        lastName: " ",
+                        image:
+                            user.profileImage.isEmpty || user.profileImage == null
+                                ? null
+                                : NetworkImage(user.profileImage),
+                        backgroundColor: StyledColors.DARK_GREEN.withOpacity(0.4),
                       ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      rootBloc.add(UserLoggedOutEvent());
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.LOGIN_ROUTE, (route) => false);
-                    },
-                    child: Text(
-                      "LOGOUT",
-                      style: TextStyle(
-                        color: StyledColors.DARK_BLUE,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
+                      SizedBox(
+                        height: 16,
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 24,
+                      Text(
+                        "${user.name}",
+                        style: TextStyle(
+                          color: StyledColors.DARK_GREEN.withOpacity(0.7),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      ListTile(
+                        title: Text(
+                          "NSBM Email",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${user.nsbmEmail}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      ListTile(
+                        title: Text(
+                          "NSBM ID",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${user.nsbmId}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      ListTile(
+                        title: Text(
+                          "Registered University",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${user.registeredUniversity}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      ListTile(
+                        title: Text(
+                          "Degree Program",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${user.degree}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      ListTile(
+                        title: Text(
+                          "University Email",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${user.universityEmail}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      ListTile(
+                        title: Text(
+                          "University ID",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${user.universityId}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      SizedBox(
+                        height: 24,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StudentHistoryProvider(),
+                              fullscreenDialog: true,
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Student History",
+                          style: TextStyle(
+                            color: StyledColors.DARK_GREEN,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          rootBloc.add(UserLoggedOutEvent());
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, Routes.LOGIN_ROUTE, (route) => false);
+                        },
+                        child: Text(
+                          "LOGOUT",
+                          style: TextStyle(
+                            color: StyledColors.DARK_BLUE,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                    ],
                   ),
                 ],
               );

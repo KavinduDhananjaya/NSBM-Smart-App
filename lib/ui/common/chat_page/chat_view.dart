@@ -51,30 +51,44 @@ class ChatView extends StatelessWidget {
               return loadingWidget;
             }
 
-            return Container(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 12,
+            return Stack(
+              children: [
+
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Image.asset(
+                    "assets/images/login_bottom.png",
+                    color: Colors.lightGreen.withOpacity(0.2),
+
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: state.chatRooms.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return ChatRoomsTile(
-                          user: state.chatRooms[index].users.last,
-                          chatRoom: state.chatRooms[index],
-                          lastMsg: state.chatRooms[index].lastMsg ?? "",
-                        );
-                      },
-                    ),
-                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: state.chatRooms.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return ChatRoomsTile(
+                              user: state.chatRooms[index].users.last,
+                              chatRoom: state.chatRooms[index],
+                              lastMsg: state.chatRooms[index].lastMsg ?? "",
+                            );
+                          },
+                        ),
+                      ),
 
 
-                ],
-              ),
+                    ],
+                  ),
+                ),
+              ],
             );
           }),
       floatingActionButton: FloatingActionButton(
