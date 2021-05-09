@@ -65,101 +65,123 @@ class LecturerProfileView extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: BlocBuilder<RootBloc,RootState>(
-            buildWhen: (pre,current)=>pre.currentUser!=current.currentUser,
-            builder: (context, snapshot) {
-              return Column(
-                children: [
-                  SizedBox(
-                    height: 8,
-                  ),
-                  ProfileImage(
-                    style: TextStyle(
-                      color: StyledColors.DARK_GREEN,
-                      fontSize: 27,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    radius: 32,
-                    firstName: "${snapshot.currentUser.name}",
-                    lastName: " ",
-                    image:
-                    snapshot.currentUser.profileImage.isEmpty || snapshot.currentUser.profileImage == null
-                        ? null
-                        : NetworkImage(snapshot.currentUser.profileImage),
-                    backgroundColor: StyledColors.DARK_GREEN.withOpacity(0.4),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    "${snapshot.currentUser.name}",
-                    style: TextStyle(
-                      color: StyledColors.DARK_GREEN.withOpacity(0.7),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  ListTile(
-                    title: Text(
-                      "NSBM Email",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${snapshot.currentUser.nsbmEmail}',
-                      style: subtitleStyle,
-                    ),
-                  ),
-                  separator,
-                  ListTile(
-                    title: Text(
-                      "NSBM ID",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${snapshot.currentUser.nsbmId}',
-                      style: subtitleStyle,
-                    ),
-                  ),
-                  separator,
-                  ListTile(
-                    title: Text(
-                      "University Email",
-                      style: titleStyle,
-                    ),
-                    subtitle: Text(
-                      '${snapshot.currentUser.universityEmail}',
-                      style: subtitleStyle,
-                    ),
-                  ),
-                  separator,
-                  SizedBox(
-                    height: 24,
-                  ),
-                  FlatButton(
-                    onPressed: () {
-                      rootBloc.add(UserLoggedOutEvent());
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.LOGIN_ROUTE, (route) => false);
-                    },
-                    child: Text(
-                      "LOGOUT",
-                      style: TextStyle(
-                        color: StyledColors.DARK_BLUE,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/main_top.png",
+              color: Colors.lightGreen.withOpacity(0.4),
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Image.asset(
+              "assets/images/login_bottom.png",
+              color: Colors.lightGreen.withOpacity(0.2),
+
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              child: BlocBuilder<RootBloc,RootState>(
+                buildWhen: (pre,current)=>pre.currentUser!=current.currentUser,
+                builder: (context, snapshot) {
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: 8,
+                      ),
+                      ProfileImage(
+                        style: TextStyle(
+                          color: StyledColors.DARK_GREEN,
+                          fontSize: 27,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        radius: 32,
+                        firstName: "${snapshot.currentUser.name}",
+                        lastName: " ",
+                        image:
+                        snapshot.currentUser.profileImage.isEmpty || snapshot.currentUser.profileImage == null
+                            ? null
+                            : NetworkImage(snapshot.currentUser.profileImage),
+                        backgroundColor: StyledColors.DARK_GREEN.withOpacity(0.4),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        "${snapshot.currentUser.name}",
+                        style: TextStyle(
+                          color: StyledColors.DARK_GREEN.withOpacity(0.7),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      ListTile(
+                        title: Text(
+                          "NSBM Email",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${snapshot.currentUser.nsbmEmail}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      ListTile(
+                        title: Text(
+                          "NSBM ID",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${snapshot.currentUser.nsbmId}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      ListTile(
+                        title: Text(
+                          "University Email",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${snapshot.currentUser.universityEmail}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
+                      SizedBox(
+                        height: 24,
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          rootBloc.add(UserLoggedOutEvent());
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, Routes.LOGIN_ROUTE, (route) => false);
+                        },
+                        child: Text(
+                          "LOGOUT",
+                          style: TextStyle(
+                            color: StyledColors.DARK_BLUE,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
