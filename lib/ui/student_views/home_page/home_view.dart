@@ -364,7 +364,7 @@ class HomeView extends StatelessWidget {
                                     ),
                                     Icon(
                                       Icons.map,
-                                      color: StyledColors.DARK_BLUE,
+                                      color: StyledColors.DARK_GREEN,
                                       size: 50,
                                     ),
                                   ],

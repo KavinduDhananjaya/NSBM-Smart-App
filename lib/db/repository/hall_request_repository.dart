@@ -14,6 +14,7 @@ class HallRequestRepository extends FirebaseRepository<HallRequest> {
       ref: snapshot.reference,
       type: data[HallRequest.TYPE] ?? "",
       state: data[HallRequest.STATE] ?? "",
+      adminState: data[HallRequest.ADMIN_STATE] ?? "",
       purpose: data[HallRequest.PURPOSE] ?? "",
       faculty: data[HallRequest.FACULTY] ?? "",
       hall: data[HallRequest.HALL],
@@ -42,6 +43,7 @@ class HallRequestRepository extends FirebaseRepository<HallRequest> {
       HallRequest.FACULTY: request.faculty,
       HallRequest.PURPOSE: request.purpose,
       HallRequest.STATE: request.state,
+      HallRequest.ADMIN_STATE: request.adminState,
     };
   }
 

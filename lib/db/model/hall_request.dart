@@ -14,6 +14,7 @@ class HallRequest extends DBModel {
   static const HALL = 'hall';
   static const FACULTY = 'faculty';
   static const STATE = 'state';
+  static const ADMIN_STATE = 'adminState';
 
   String type;
   String purpose;
@@ -27,6 +28,7 @@ class HallRequest extends DBModel {
   DocumentReference hall;
   String faculty;
   String state;
+  String adminState;
 
   HallRequest({
     DocumentReference ref,
@@ -42,6 +44,7 @@ class HallRequest extends DBModel {
     this.hall,
     this.faculty,
     this.state,
+    this.adminState,
   }) : super(ref: ref);
 
   @override
@@ -59,6 +62,7 @@ class HallRequest extends DBModel {
     DocumentReference hall,
     String faculty,
     String state,
+    String adminState,
   }) {
     return HallRequest(
       ref: ref ?? this.ref,
@@ -74,6 +78,7 @@ class HallRequest extends DBModel {
       confirmedBy: confirmedBy ?? this.confirmedBy,
       requestedAt: requestedAt ?? this.requestedAt,
       requestedBy: requestedBy ?? this.requestedBy,
+      adminState: adminState ?? this.adminState,
     );
   }
 }

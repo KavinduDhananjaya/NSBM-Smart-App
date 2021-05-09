@@ -86,6 +86,7 @@ class HallBookingBloc extends Bloc<HallBookingEvent, HallBookingState> {
           purpose: data.purpose,
           requestedBy: rootBloc.state.currentUser.ref,
           state: "pending",
+          adminState: "pending",
           requestedAt: Timestamp.now(),
           hall: hall.ref,
           assigned: lecturer.ref,

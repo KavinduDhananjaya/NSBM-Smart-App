@@ -105,7 +105,7 @@ class ProfileView extends StatelessWidget {
                           fontSize: 27,
                           fontWeight: FontWeight.w600,
                         ),
-                        radius: 32,
+                        radius: 50,
                         firstName: user.name,
                         lastName: " ",
                         image:

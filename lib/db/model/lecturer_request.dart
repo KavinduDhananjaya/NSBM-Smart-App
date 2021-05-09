@@ -13,6 +13,7 @@ class LectureRequest extends DBModel {
   static const FACULTY = 'faculty';
   static const STATE = 'state';
   static const MESSAGE = 'message';
+  static const ADMIN_STATE = 'adminState';
 
   String type;
   String purpose;
@@ -22,6 +23,7 @@ class LectureRequest extends DBModel {
   DocumentReference confirmedBy;
   String faculty;
   String state;
+  String adminState;
   String message;
   DocumentReference requestedBy;
   Timestamp requestedAt;
@@ -39,6 +41,7 @@ class LectureRequest extends DBModel {
     this.message,
     this.requestedBy,
     this.requestedAt,
+    this.adminState,
   }) : super(ref: ref);
 
   @override
@@ -55,6 +58,7 @@ class LectureRequest extends DBModel {
     String message,
     DocumentReference requestedBy,
     Timestamp requestedAt,
+    String adminState,
   }) {
     return LectureRequest(
       ref: ref ?? this.ref,
@@ -69,6 +73,7 @@ class LectureRequest extends DBModel {
       confirmedAt: confirmedAt ?? this.confirmedAt,
       date: date ?? this.date,
       assigned: assigned ?? this.assigned,
+      adminState: adminState ?? this.adminState,
     );
   }
 }

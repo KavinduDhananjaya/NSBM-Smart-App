@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:fcode_bloc/fcode_bloc.dart';
 import 'package:fcode_common/fcode_common.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,8 @@ class TimeTableView extends StatelessWidget {
             for (int i = 0; i < state.todayTimetable.content.length; i++) {
               final cotent = state.todayTimetable.content[i];
 
+              final time = new DateFormat.jm().format(cotent['time'].toDate()??DateTime.now());
+
               final dataRow = DataRow(cells: [
                 DataCell(
                   Text(cotent['module']),
@@ -82,6 +85,9 @@ class TimeTableView extends StatelessWidget {
                     }, // The widget using the data
                   ),
                 ),
+                DataCell(
+                  Text(time),
+                ),
               ]);
 
               rows.add(dataRow);
@@ -92,7 +98,7 @@ class TimeTableView extends StatelessWidget {
               margin: EdgeInsets.all(0),
               child: Scrollbar(
                 child: DataTable(
-                  columnSpacing: 3,
+                  columnSpacing: 2,
                   dataRowHeight: 50,
                   dividerThickness: 2,
                   columns: [
@@ -105,11 +111,15 @@ class TimeTableView extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold))),
                     DataColumn(
-                        label: Text('Hall Number',
+                        label: Text('Hall',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold))),
                     DataColumn(
                         label: Text('Lecturer',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold))),
+                    DataColumn(
+                        label: Text('Time',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold))),
                   ],
