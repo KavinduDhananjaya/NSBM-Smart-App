@@ -127,6 +127,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
             specification: ComplexSpecification(
                 [ComplexWhere(User.ROLE_FIELD, isEqualTo: "lecturer")]))
         .listen((event) {
+          print(event);
       add(ChangeAllLecturersEvent(event));
     });
   }

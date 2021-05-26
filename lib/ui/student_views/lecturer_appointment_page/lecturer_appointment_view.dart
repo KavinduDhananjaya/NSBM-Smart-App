@@ -157,7 +157,7 @@ class LectureAppointmentViewState extends State<LectureAppointmentView> {
 
                 return DropdownSearch<String>(
                   mode: Mode.DIALOG,
-                  maxHeight: 300,
+                  maxHeight: 400,
                   items: userNames,
                   label: "Select Lecture",
                   selectedItem: null,
