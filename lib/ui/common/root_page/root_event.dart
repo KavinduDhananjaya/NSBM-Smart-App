@@ -90,7 +90,7 @@ class ChangeAllHallsEvent extends RootEvent {
 }
 
 class ChangeTodayTimetable extends RootEvent {
-  final TimeTable data;
+  final List<TimeTable> data;
 
   ChangeTodayTimetable(this.data);
 }

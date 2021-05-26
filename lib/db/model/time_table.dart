@@ -12,7 +12,7 @@ class TimeTable extends DBModel {
 
   String state;
   String date;
-  List<Map> content;
+  Map content;
 
   TimeTable({
     DocumentReference ref,
@@ -26,7 +26,7 @@ class TimeTable extends DBModel {
     DocumentReference ref,
     String state,
     String date,
-    List<Map> content,
+    Map content,
   }) {
     return TimeTable(
       ref: ref ?? this.ref,

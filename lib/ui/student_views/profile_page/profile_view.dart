@@ -194,6 +194,17 @@ class ProfileView extends StatelessWidget {
                         ),
                       ),
                       separator,
+                      ListTile(
+                        title: Text(
+                          "Batch",
+                          style: titleStyle,
+                        ),
+                        subtitle: Text(
+                          '${user.batch}',
+                          style: subtitleStyle,
+                        ),
+                      ),
+                      separator,
                       SizedBox(
                         height: 24,
                       ),

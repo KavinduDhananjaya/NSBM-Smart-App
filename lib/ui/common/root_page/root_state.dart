@@ -25,7 +25,7 @@ class RootState {
   final List<User> allLecturers;
   final List<Hall> allHalls;
   final int showingType;
-  final TimeTable todayTimetable;
+  final List<TimeTable> todayTimetable;
 
   RootState({
     @required this.error,
@@ -69,7 +69,7 @@ class RootState {
     int showingType,
     List<User> allLecturers,
     List<Hall> allHalls,
-    TimeTable todayTimetable,
+    List<TimeTable> todayTimetable,
   }) {
     return RootState(
       error: error ?? this.error,

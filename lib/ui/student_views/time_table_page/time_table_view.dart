@@ -59,38 +59,40 @@ class TimeTableView extends StatelessWidget {
               return Center(child: Text("No Today TimeTable"));
             }
 
+
             List<DataRow> rows = [];
-            for (int i = 0; i < state.todayTimetable.content.length; i++) {
-              final cotent = state.todayTimetable.content[i];
+            for (int i = 0; i < state.todayTimetable.length; i++) {
 
-              final time = cotent['time'] ?? " ";
+              final cotent = state.todayTimetable[i].content['0'];
 
-              final dataRow = DataRow(cells: [
-                DataCell(
-                  Text(cotent['module']),
-                ),
-                DataCell(
-                  Text(cotent['batch']),
-                ),
-                DataCell(
-                  Text(cotent['hallNumber']),
-                ),
-                DataCell(
-                  FutureBuilder(
-                    future: getUser(cotent['lecturer']),
-                    builder: (context, snapshot) {
-                      return Text(
-                        snapshot.hasData ? snapshot.data.name : "-",
-                      );
-                    }, // The widget using the data
+              if(cotent['batch']==rootBloc.state.currentUser.batch){
+                final time = cotent['time'] ?? " ";
+
+                final dataRow = DataRow(cells: [
+                  DataCell(
+                    Text(cotent['module']),
                   ),
-                ),
-                DataCell(
-                  Text(time),
-                ),
-              ]);
+                  DataCell(
+                    Text(cotent['batch']),
+                  ),
+                  DataCell(
+                    Text(cotent['hallNumber']),
+                  ),
+                  DataCell(
+                    Text(cotent['lecturer']),
+                  ),
+                  DataCell(
+                    Text(time),
+                  ),
+                ]);
 
-              rows.add(dataRow);
+                rows.add(dataRow);
+              }
+
+            }
+
+            if(rows.isEmpty){
+              return Center(child: Text("No Today TimeTable"));
             }
 
             return Container(

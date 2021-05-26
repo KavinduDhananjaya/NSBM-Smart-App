@@ -11,12 +11,18 @@ class TimeTableRepository extends FirebaseRepository<TimeTable> {
     final data = snapshot.data();
     if (data == null) return null;
 
-    return TimeTable(
-      ref: snapshot.reference,
-      state: data[TimeTable.STATE] ?? "",
-      date: data[TimeTable.DATE] ?? "",
-      content: List<Map<String,dynamic>>.from(data[TimeTable.CONTENT]),
-    );
+    try{
+      return TimeTable(
+        ref: snapshot.reference,
+        state: data[TimeTable.STATE] ?? "",
+        date: data[TimeTable.DATE] ?? "",
+        content: Map.of(data[TimeTable.CONTENT] ?? {}),
+      );
+    }catch(e){
+      print(e);
+      return null;
+    }
+
   }
 
   @override

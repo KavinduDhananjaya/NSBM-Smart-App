@@ -146,11 +146,11 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     _timetableSubscription?.cancel();
     _timeTableRepository
         .query(
-            specification: ComplexSpecification(
-                [ComplexWhere(TimeTable.DATE, isEqualTo: today)]))
+            specification: ComplexSpecification([]))
         .listen((event) {
       if (event.length > 0) {
-        add(ChangeTodayTimetable(event[0]));
+
+        add(ChangeTodayTimetable(event));
       }
     });
   }
