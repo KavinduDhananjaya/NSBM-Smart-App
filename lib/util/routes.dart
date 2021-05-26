@@ -6,16 +6,15 @@ import 'package:smart_app/ui/common/login_page/login_page.dart';
 abstract class Routes {
   Routes._();
 
-  static List<String> faculties=["CSE","Management","Tech","Art","Electronic"];
+  static List<String> faculties = ["FOC", "FOB", "FOE"];
 
   static String timeAgoSinceDate(DateTime time, {bool numericDates = true}) {
-
     DateTime notificationDate = time;
     final date2 = DateTime.now();
 
     final difference = date2.difference(notificationDate);
 
-   if ((difference.inDays / 7).floor() >= 1) {
+    if ((difference.inDays / 7).floor() >= 1) {
       return (numericDates) ? '1 week ago' : 'Last week';
     } else if (difference.inDays >= 2) {
       return '${difference.inDays} days ago';
@@ -35,7 +34,6 @@ abstract class Routes {
       return 'Just now';
     }
   }
-
 
   static const LOGIN_ROUTE = "login";
   static const HOME_ROUTE = "home";
