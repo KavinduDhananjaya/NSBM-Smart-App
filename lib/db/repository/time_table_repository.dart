@@ -15,7 +15,7 @@ class TimeTableRepository extends FirebaseRepository<TimeTable> {
       ref: snapshot.reference,
       state: data[TimeTable.STATE] ?? "",
       date: data[TimeTable.DATE] ?? "",
-      content: List<Map>.from(data[TimeTable.CONTENT]),
+      content: List<Map<String,dynamic>>.from(data[TimeTable.CONTENT]),
     );
   }
 

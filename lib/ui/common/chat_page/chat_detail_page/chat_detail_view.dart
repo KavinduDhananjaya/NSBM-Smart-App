@@ -198,9 +198,7 @@ class ChatDetailViewState extends State<ChatDetailView> {
                         sendByMe: user?.ref?.path ==
                             state.allChat[i]?.sendBy?.path,
                       );
-
                       list.add(_wrapScrollTag(index: i + 1, btn: tile));
-
                     }
 
 

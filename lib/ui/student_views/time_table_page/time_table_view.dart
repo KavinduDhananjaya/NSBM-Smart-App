@@ -63,7 +63,7 @@ class TimeTableView extends StatelessWidget {
             for (int i = 0; i < state.todayTimetable.content.length; i++) {
               final cotent = state.todayTimetable.content[i];
 
-              final time = new DateFormat.jm().format(cotent['time'].toDate()??DateTime.now());
+              final time = cotent['time'] ?? " ";
 
               final dataRow = DataRow(cells: [
                 DataCell(

@@ -75,16 +75,20 @@ class ChatView extends StatelessWidget {
                           itemCount: state.chatRooms.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
+
+                            final user=rootBloc.state.currentUser.ref;
+
+                            final chatUsers=List.of(state.chatRooms[index].users);
+                            chatUsers.remove(user);
+
                             return ChatRoomsTile(
-                              user: state.chatRooms[index].users.last,
+                              user: chatUsers.first,
                               chatRoom: state.chatRooms[index],
                               lastMsg: state.chatRooms[index].lastMsg ?? "",
                             );
                           },
                         ),
                       ),
-
-
                     ],
                   ),
                 ),

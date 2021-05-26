@@ -54,8 +54,6 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
         yield state.clone(error: error);
         break;
 
-
-
       case GetAllChat:
         final all = (event as GetAllChat).all;
         yield state.clone(allChat: all);
