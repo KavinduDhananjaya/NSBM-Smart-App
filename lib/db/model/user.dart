@@ -9,8 +9,9 @@ class User extends DBModel {
   static const NSBM_EMAIL_FIELD = 'nsbmEmail';
   static const ROLE_FIELD = 'role';
   static const PROFILE_IMAGE_FIELD = 'profileImage';
-  static const REGISTERED_UNIVERSITY_FIELD = 'RegisteredUniversity';
-  static const DEGREE_FIELD = 'Degree';
+  static const REGISTERED_UNIVERSITY_FIELD = 'registeredUniversity';
+  static const DEGREE_FIELD = 'degree';
+  static const BATCH = 'batch';
 
   String name;
   String universityEmail;
@@ -21,6 +22,7 @@ class User extends DBModel {
   String degree;
   String registeredUniversity;
   String profileImage;
+  String batch;
 
   User({
     DocumentReference ref,
@@ -33,6 +35,7 @@ class User extends DBModel {
     this.role,
     this.universityEmail,
     this.universityId,
+    this.batch,
   }) : super(ref: ref);
 
   @override
@@ -48,6 +51,7 @@ class User extends DBModel {
       registeredUniversity: registeredUniversity,
       universityEmail: universityEmail,
       universityId: universityId,
+      batch: batch,
     );
   }
 }

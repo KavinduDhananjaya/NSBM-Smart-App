@@ -23,6 +23,7 @@ class UserRepository extends FirebaseRepository<User> {
         nsbmId: data[User.NSBM_ID_FIELD] ?? "",
         profileImage: data[User.PROFILE_IMAGE_FIELD] ?? "",
         registeredUniversity: data[User.REGISTERED_UNIVERSITY_FIELD] ?? "",
+        batch: data[User.BATCH] ?? "",
       );
     } catch (e) {
       print("Fetching Data Exception >>>>>>>${e}");
@@ -42,6 +43,7 @@ class UserRepository extends FirebaseRepository<User> {
       User.DEGREE_FIELD: user.degree,
       User.REGISTERED_UNIVERSITY_FIELD: user.registeredUniversity,
       User.PROFILE_IMAGE_FIELD: user.profileImage,
+      User.BATCH: user.batch,
     };
   }
 
